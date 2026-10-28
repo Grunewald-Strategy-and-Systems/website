@@ -165,6 +165,9 @@ body.is-loading .curtain{pointer-events:auto}
 .member__role{display:block;margin:10px 0 18px;font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:500}
 .member p{font-size:clamp(15px,1.3vw,18px);max-width:46ch}
 .member em{color:var(--gold)}
+.member__facts{margin-top:22px;display:grid;gap:10px}
+.member__facts li{position:relative;padding-left:22px;font-size:clamp(14px,1.15vw,16px);color:rgba(255,255,255,.85)}
+.member__facts li::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;background:var(--gold);transform:rotate(45deg)}
 .member + .team__flow{margin-top:36px}
 .team__grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,110px);align-items:start}
 .team__copy{padding-top:clamp(0px,6vw,90px)}
