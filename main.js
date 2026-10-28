@@ -23,7 +23,6 @@
 
   const panes = $$('.sec');
   const N = panes.length;
-  const nav = $('#nav');
   const gutter = () => parseFloat(getComputedStyle(root).getPropertyValue('--gutter')) || 0;
 
   /* ---------- text splitting ---------- */
@@ -64,8 +63,7 @@
   /* ---------- initial states ---------- */
   gsap.set(chars, { yPercent: 115, rotate: 6 });
   gsap.set(['.hero .eyebrow', '.hero__trio li', '.scroll-cue', '.hero__dot'], { opacity: 0, y: 30 });
-  gsap.set('.nav', { yPercent: -100 });
-  gsap.set('.index', { opacity: 0 });
+  gsap.set('.rail', { opacity: 0 });
   $$('.num').forEach(n => (n.textContent = fmt(0, n.dataset.sep)));
 
   /* ---------- intro curtain ---------- */
@@ -83,12 +81,12 @@
   function heroIn() {
     panes[0].classList.add('is-seen');
     gsap.timeline({ defaults: { ease: 'power4.out' } })
-      .to('.nav', { yPercent: 0, duration: 1 }, 0)
       .to('.hero .eyebrow', { opacity: 1, y: 0, duration: 1 }, 0.1)
       .to(chars, { yPercent: 0, rotate: 0, duration: 1.4, stagger: 0.055 }, 0.35)
       .to('.hero__dot', { opacity: 1, y: 0, duration: 0.8 }, 1.1)
       .to('.hero__trio li', { opacity: 1, y: 0, duration: 1, stagger: 0.12 }, 1.0)
-      .to(['.scroll-cue', '.index'], { opacity: 1, y: 0, duration: 1 }, 1.4);
+      .to('.scroll-cue', { opacity: 1, y: 0, duration: 1 }, 1.4)
+      .to('.rail', { opacity: 1, duration: 1 }, 1.4);
   }
 
   /* ---------- ambient (kept calm) ---------- */
@@ -124,8 +122,6 @@
   function setActive(i) {
     if (i === activeIdx) return;
     activeIdx = i;
-    const dark = panes[i].classList.contains('sec--dark');
-    nav.classList.toggle('on-dark', dark);
     const idx = $('.index__now');
     if (idx.textContent !== panes[i].dataset.label) {
       gsap.fromTo(idx, { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.5, ease: 'power3.out' });
@@ -209,7 +205,6 @@
         if (time >= rest[i].rs - T * 0.8) markSeen(i);   // start revealing as the pane begins to slide
       }
       setActive(a);
-      gsap.set('.nav__progress i', { scaleX: tl.progress() });
       gsap.set('.index__line i', { scaleY: tl.progress() });
     });
 

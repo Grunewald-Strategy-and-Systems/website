@@ -50,23 +50,14 @@ strong{font-weight:500}
 .w>span{display:inline-block;will-change:transform}
 .c{display:inline-block;will-change:transform}
 
-/* ---------- nav ---------- */
-.nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:18px var(--gutter);color:var(--maroon);transition:color .5s var(--ease)}
-.nav.on-dark{color:var(--white)}
-.nav__brand img{width:46px;height:46px;transition:transform .6s var(--ease)}
-.nav__brand:hover img{transform:rotate(-8deg) scale(1.06)}
-.nav__links{display:flex;gap:clamp(16px,2.4vw,38px);align-items:center;font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:500}
-.nav__links a{position:relative;padding:6px 0}
-.nav__links a:not(.nav__cta)::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease)}
-.nav__links a:not(.nav__cta):hover::after{transform:scaleX(1);transform-origin:left}
-.nav__cta{padding:11px 20px!important;border:1px solid var(--gold);color:var(--gold);transition:background .4s,color .4s}
-.nav__cta:hover{background:var(--gold);color:var(--white)}
-.nav__progress{position:absolute;left:0;bottom:0;height:2px;width:100%}
-.nav__progress i{display:block;height:100%;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:left}
-
-.index{position:fixed;right:clamp(14px,2vw,32px);top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;align-items:center;gap:12px;font-family:var(--font-display);font-size:13px;color:var(--gold);mix-blend-mode:normal}
-.index__line{width:1px;height:90px;background:rgba(184,134,11,.35);position:relative}
+/* ---------- side rail (progress + home + chat) ---------- */
+.rail{position:fixed;right:clamp(12px,1.8vw,28px);top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;align-items:center;gap:12px;font-family:var(--font-display);font-size:13px;color:var(--gold)}
+.index__line{width:1px;height:clamp(70px,14vh,120px);background:rgba(184,134,11,.35);position:relative}
 .index__line i{position:absolute;left:0;top:0;width:1px;height:100%;background:var(--gold);transform:scaleY(0);transform-origin:top}
+.rail__btn{width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(184,134,11,.65);border-radius:50%;color:var(--gold);transition:background .4s var(--ease),color .4s var(--ease),transform .4s var(--ease)}
+.rail__btn svg{width:18px;height:18px}
+.rail__btn:hover{background:var(--gold);color:var(--white);transform:scale(1.08)}
+.rail__btn--first{margin-top:10px}
 
 /* ---------- curtain / page transition ---------- */
 .curtain{position:fixed;inset:0;z-index:100;display:flex;pointer-events:none}
@@ -209,8 +200,9 @@ body.is-loading .curtain{pointer-events:auto}
 
 /* ---------- responsive ---------- */
 @media (max-width:960px){
-  .nav__links a:not(.nav__cta){display:none}
-  .index{display:none}
+  .rail__now,.rail__total,.index__line{display:none}
+  .rail{top:auto;bottom:16px;transform:none;right:12px}
+  .rail__btn--first{margin-top:0}
   .philosophy__grid,.team__grid,.why__grid{grid-template-columns:1fr}
   .team__copy{padding-top:0}
   .exp__grid{grid-template-columns:1fr}
@@ -238,7 +230,7 @@ html:not(.js) .hscroll__track{flex-wrap:wrap;width:auto}
 .js .sec{position:absolute;inset:0}
 .js .sec + .sec{box-shadow:0 -30px 70px rgba(40,0,0,.28)}
 .js .sec + .sec::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--gold);z-index:5}
-.js .pane-inner{padding:clamp(84px,12vh,120px) 0 clamp(32px,6vh,64px);will-change:transform}
+.js .pane-inner{padding:clamp(48px,9vh,96px) 0 clamp(32px,6vh,64px);will-change:transform}
 .js .scroll-space{width:1px;pointer-events:none}
 
 /* reveal choreography: fires once, as each pane starts sliding in */
