@@ -5,12 +5,26 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fmt = (n, sep) => (sep ? Math.round(n).toLocaleString('en-US') : String(Math.round(n)));
 
+  // Live "time saved / money saved" feed. Set to your dashboard endpoint returning
+  // JSON like {"hours": 60, "money": 1750}. Empty = keep the static fallback numbers in index.html.
+  const GSS_LIVE_URL = '';
+  const liveReady = !GSS_LIVE_URL ? Promise.resolve() : fetch(GSS_LIVE_URL, { headers: { Accept: 'application/json' } })
+    .then(r => (r.ok ? r.json() : Promise.reject()))
+    .then(d => $$('[data-live-key]').forEach(n => {
+      const v = Number(d[n.dataset.liveKey]);
+      if (!isFinite(v)) return;
+      n.dataset.count = v;
+      const tag = $('.live-tag', n.parentElement); if (tag) tag.hidden = false;
+    }))
+    .catch(() => {});
+
   $('#year').textContent = new Date().getFullYear();
 
   // Graceful fallback: no GSAP or reduced motion → static, fully readable page.
   if (!window.gsap || !window.ScrollTrigger || reduce) {
     body.classList.remove('is-loading');
     const c = $('.curtain'); if (c) c.remove();
+    liveReady.then(() => $$('.num').forEach(n => (n.textContent = fmt(+n.dataset.count, n.dataset.sep))));
     $$('.num').forEach(n => (n.textContent = fmt(+n.dataset.count, n.dataset.sep)));
     return;
   }
@@ -144,14 +158,14 @@
   });
 
   $$('.num').forEach(n => {
-    const end = +n.dataset.count, o = { v: 0 };
+    const o = { v: 0 };
     ScrollTrigger.create({
       trigger: n, start: 'top 90%', once: true,
-      onEnter: () => gsap.to(o, {
+      onEnter: () => liveReady.then(() => { const end = +n.dataset.count; gsap.to(o, {
         v: end, duration: end > 1000 ? 2.6 : 1.8, ease: 'power3.out',
         onUpdate: () => (n.textContent = fmt(o.v, n.dataset.sep)),
         onComplete: () => gsap.fromTo(n, { scale: 1.08 }, { scale: 1, duration: 0.6, ease: 'back.out(3)' })
-      })
+      }); })
     });
   });
 
