@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("js")</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Grunewald Strategy &amp; Systems</title>
 <meta name="description" content="Grunewald Strategy & Systems helps organizations save time and revolutionize their operations through strategic understanding and system implementation.">
@@ -19,8 +20,6 @@
   <div class="curtain__strip"></div><div class="curtain__strip"></div><div class="curtain__strip"></div><div class="curtain__strip"></div><div class="curtain__strip"></div>
   <img class="curtain__badge" src="assets/badge.png" alt="">
 </div>
-
-<div class="cursor" aria-hidden="true"><span></span></div>
 
 <header class="nav" id="nav">
   <a href="#hero" class="nav__brand" data-jump aria-label="Grunewald Strategy & Systems — top">
@@ -41,10 +40,11 @@
   <span class="index__now">01</span><span class="index__line"><i></i></span><span class="index__total">09</span>
 </aside>
 
-<main>
+<main class="stage" id="stage">
 
 <!-- 1 · HERO -->
 <section id="hero" class="sec sec--light hero" data-label="01">
+<div class="pane-inner">
   <div class="hero__bg" aria-hidden="true">
     <svg class="hero__rings" viewBox="0 0 1200 1200" preserveAspectRatio="xMidYMid slice">
       <g fill="none" stroke="#B8860B" stroke-width="1">
@@ -80,11 +80,12 @@
   </div>
 
   <a href="#problem" data-jump class="scroll-cue" aria-label="Scroll to next section"><span>Scroll</span><i></i></a>
+</div>
 </section>
 
 <!-- 2 · THE PROBLEM -->
 <section id="problem" class="sec sec--dark problem" data-label="02">
-  <div class="sec__bg" aria-hidden="true"></div>
+<div class="pane-inner">
   <div class="marquee" aria-hidden="true">
     <div class="marquee__track">
       <span>Overworked</span><i></i><span>9-9-6</span><i></i><span>The corporate ladder</span><i></i><span>Good enough never exists</span><i></i>
@@ -96,28 +97,31 @@
     <h2 class="display split-words">We live in a time of absolute overworking.</h2>
 
     <div class="problem__cols">
-      <div class="problem__card">
+      <div class="problem__card fade-up">
         <span class="problem__where">In America</span>
         <span class="problem__big">The corporate <em>ladder</em></span>
       </div>
-      <div class="problem__card">
+      <div class="problem__card fade-up">
         <span class="problem__where">In China</span>
         <span class="problem__big"><span class="num" data-count="9">9</span>-<span class="num" data-count="9">9</span>-<span class="num" data-count="6">6</span></span>
         <span class="problem__note">9am to 9pm, 6 days a week</span>
       </div>
     </div>
 
-    <p class="body-lg problem__text fade-up">
+    <div class="problem__foot">
+      <p class="body-lg problem__text fade-up">
       Rest, sleep, and leisure have become a dream of the past. We sacrifice sanity for efficiency.
       We have developed an economy in which more is always required and good enough never exists.
     </p>
     <p class="problem__verdict fade-up">Unsustainable.</p>
+    </div>
   </div>
+</div>
 </section>
 
 <!-- 3 · PHILOSOPHY -->
 <section id="philosophy" class="sec sec--light philosophy" data-label="03">
-  <div class="sec__bg" aria-hidden="true"></div>
+<div class="pane-inner">
   <div class="wrap philosophy__grid">
     <div class="philosophy__copy">
       <p class="kicker"><span>03</span>Our Philosophy</p>
@@ -154,10 +158,12 @@
       </figcaption>
     </figure>
   </div>
+</div>
 </section>
 
 <!-- 4 · WHAT WE DO (horizontal scroll) -->
 <section id="what" class="sec sec--cream hscroll" data-label="04">
+<div class="pane-inner">
   <div class="hscroll__bgtext" aria-hidden="true">Efficiency</div>
   <div class="hscroll__head wrap">
     <p class="kicker"><span>04</span>What We Do</p>
@@ -166,40 +172,41 @@
 
   <div class="hscroll__viewport">
     <div class="hscroll__track">
-      <article class="panel panel--intro">
+      <article class="fade-up panel panel--intro">
         <p class="body-lg">We meet with you and your team to understand your limiting factors and help you unlock efficiency.</p>
         <span class="panel__hint">Keep scrolling <i></i></span>
       </article>
 
-      <article class="panel panel--card">
+      <article class="fade-up panel panel--card">
         <span class="panel__n">01</span>
         <h3>Understand</h3>
         <p>We meet with you and your team to understand your limiting factors.</p>
       </article>
 
-      <article class="panel panel--card panel--maroon">
+      <article class="fade-up panel panel--card panel--maroon">
         <span class="panel__n">02</span>
         <h3>Unlock</h3>
         <p>We help you unlock efficiency — increasing your bottom line and achieving your goals.</p>
       </article>
 
-      <article class="panel panel--card">
+      <article class="fade-up panel panel--card">
         <span class="panel__n">03</span>
         <h3>Reclaim</h3>
         <p>We give you time to spend on more important tasks.</p>
       </article>
 
-      <article class="panel panel--outro">
+      <article class="fade-up panel panel--outro">
         <p class="display display--sm">Sounds too good to be true?</p>
         <p class="body-lg">Talk with us <a href="#contact" data-jump class="ulink">here</a> or see our <a href="#experience" data-jump class="ulink">client stories</a>.</p>
       </article>
     </div>
   </div>
+</div>
 </section>
 
 <!-- 5 · TEAM -->
 <section id="team" class="sec sec--dark team" data-label="05">
-  <div class="sec__bg" aria-hidden="true"></div>
+<div class="pane-inner">
   <div class="wrap team__grid">
     <div>
       <p class="kicker"><span>05</span>Our Team</p>
@@ -210,19 +217,20 @@
         Our team comes from top universities with experience around the world.
         With diverse experience across a number of industries, we have built an understanding of how to address problems, identify solutions, and implement fixes.
       </p>
-      <ul class="team__tags fade-up">
-        <li>Top universities</li><li>Experience worldwide</li><li>Across industries</li>
+      <ul class="team__tags">
+        <li class="fade-up">Top universities</li><li class="fade-up">Experience worldwide</li><li class="fade-up">Across industries</li>
       </ul>
-      <ol class="team__flow fade-up" aria-label="How we work">
-        <li>Address problems</li><li>Identify solutions</li><li>Implement fixes</li>
+      <ol class="team__flow" aria-label="How we work">
+        <li class="fade-up">Address problems</li><li class="fade-up">Identify solutions</li><li class="fade-up">Implement fixes</li>
       </ol>
     </div>
   </div>
+</div>
 </section>
 
 <!-- 6 · WHY STRATEGY & SYSTEMS -->
 <section id="why" class="sec sec--light why" data-label="06">
-  <div class="sec__bg" aria-hidden="true"></div>
+<div class="pane-inner">
   <div class="wrap">
     <p class="kicker"><span>06</span>Why Strategy &amp; Systems?</p>
     <h2 class="display split-words">First, understand <em>why.</em></h2>
@@ -243,11 +251,12 @@
       </div>
     </div>
   </div>
+</div>
 </section>
 
 <!-- 7 · EXPERIENCE -->
 <section id="experience" class="sec sec--dark experience" data-label="07">
-  <div class="sec__bg" aria-hidden="true"></div>
+<div class="pane-inner">
   <div class="wrap">
     <p class="kicker"><span>07</span>Experience</p>
     <h2 class="display split-words">Results, measured.</h2>
@@ -276,11 +285,12 @@
       </article>
     </div>
   </div>
+</div>
 </section>
 
 <!-- 8 · TESTIMONIAL -->
 <section id="testimonial" class="sec sec--light testimonial" data-label="08">
-  <div class="sec__bg" aria-hidden="true"></div>
+<div class="pane-inner">
   <div class="wrap">
     <span class="quote-mark" aria-hidden="true">“</span>
     <blockquote class="quote split-words">
@@ -288,11 +298,12 @@
     </blockquote>
     <p class="quote__by fade-up"><span class="diamond"></span>A Grunewald S&amp;S client</p>
   </div>
+</div>
 </section>
 
 <!-- 9 · CONTACT / FOOTER -->
 <section id="contact" class="sec sec--dark contact" data-label="09">
-  <div class="sec__bg" aria-hidden="true"></div>
+<div class="pane-inner">
   <div class="contact__rings" aria-hidden="true">
     <svg viewBox="0 0 1200 1200" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="#B8860B" stroke-width="1">
       <circle cx="600" cy="600" r="200"/><circle cx="600" cy="600" r="340"/><circle cx="600" cy="600" r="480"/><circle cx="600" cy="600" r="620"/>
@@ -308,9 +319,11 @@
       <span>© <span id="year">2026</span> Grunewald Strategy &amp; Systems</span>
     </footer>
   </div>
+</div>
 </section>
 
 </main>
+<div class="scroll-space" id="space" aria-hidden="true"></div>
 
 <script src="vendor/gsap.min.js"></script>
 <script src="vendor/ScrollTrigger.min.js"></script>
