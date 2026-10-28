@@ -6,11 +6,25 @@
   const fmt = (n, sep) => (sep ? Math.round(n).toLocaleString('en-US') : String(Math.round(n)));
   const finalNum = n => fmt(+n.dataset.count, n.dataset.sep);
 
+  // Live "time saved / money saved" feed. Set to your dashboard endpoint returning
+  // JSON like {"hours": 60, "money": 1750}. Empty = keep the static fallback numbers in index.html.
+  const GSS_LIVE_URL = '';
+  const liveReady = !GSS_LIVE_URL ? Promise.resolve() : fetch(GSS_LIVE_URL, { headers: { Accept: 'application/json' } })
+    .then(r => (r.ok ? r.json() : Promise.reject()))
+    .then(d => $$('[data-live-key]').forEach(n => {
+      const v = Number(d[n.dataset.liveKey]);
+      if (!isFinite(v)) return;
+      n.dataset.count = v;
+      const tag = $('.live-tag', n.parentElement); if (tag) tag.hidden = false;
+    }))
+    .catch(() => {});
+
   // Static fallback: reduced motion, or GSAP failed to load → plain scrolling page.
   if (!root.classList.contains('js') || !window.gsap || !window.ScrollTrigger) {
     root.classList.remove('js');
     body.classList.remove('is-loading');
     const c = $('.curtain'); if (c) c.remove();
+    liveReady.then(() => $$('.num').forEach(n => (n.textContent = finalNum(n))));
     $$('.num').forEach(n => (n.textContent = finalNum(n)));
     $('#year').textContent = new Date().getFullYear();
     return;
@@ -101,14 +115,14 @@
   addEventListener('pointermove', e => { if (activeIdx === 0) { glowX(e.clientX); glowY(e.clientY); } });
 
   /* ---------- counters ---------- */
-  const runCounters = pane => $$('.num', pane).forEach(n => {
+  const runCounters = pane => $$('.num', pane).forEach(n => liveReady.then(() => {
     const end = +n.dataset.count, o = { v: 0 };
     gsap.to(o, {
       v: end, duration: end > 1000 ? 2.6 : 1.8, delay: 0.5, ease: 'power3.out',
       onUpdate: () => (n.textContent = fmt(o.v, n.dataset.sep)),
       onComplete: () => gsap.fromTo(n, { scale: 1.08 }, { scale: 1, duration: 0.6, ease: 'back.out(3)' })
     });
-  });
+  }));
 
   /* ---------- the pane engine ----------
      One master timeline drives the whole site: every pane has a "rest" range where the visitor
