@@ -7,14 +7,14 @@
   --gold-soft:#d9b35a;
   --ink:#2a0606;
   --font-display:'Libre Caslon Display','Bodoni Moda',Georgia,serif;
-  --font-serif:'Cormorant Garamond',Georgia,serif;
-  --font-body:'Inter',system-ui,sans-serif;
+  --font-serif:'Bodoni Moda',Georgia,serif;
+  --font-body:'Bodoni Moda',Georgia,serif;
   --gutter:clamp(20px,5vw,80px);
   --ease:cubic-bezier(.76,0,.24,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
-body{font-family:var(--font-body);font-weight:300;color:var(--maroon);background:var(--white);line-height:1.6;overflow-x:hidden}
+body{font-family:var(--font-body);font-weight:400;color:var(--maroon);background:var(--white);line-height:1.6;overflow-x:hidden}
 body.is-loading{overflow:hidden}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
