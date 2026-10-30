@@ -66,19 +66,11 @@
   titleEl.textContent = ''; chars.forEach(c => titleEl.appendChild(c));
 
   // stagger delay for reveal items inside each pane
-  panes.forEach(p => $$('.fade-up', p).forEach((el, i) => el.style.setProperty('--d', (0.3 + i * 0.1) + 's')));
-
-  // chart lines start undrawn
-  $$('.chart__line').forEach(path => {
-    const len = path.getTotalLength();
-    path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
-  });
 
   /* ---------- initial states ---------- */
   gsap.set(chars, { yPercent: 115, rotate: 6 });
   gsap.set(['.hero .eyebrow', '.hero__trio li', '.scroll-cue', '.hero__dot'], { opacity: 0, y: 30 });
   gsap.set('.rail', { opacity: 0 });
-  $$('.num').forEach(n => (n.textContent = fmt(0, n.dataset.sep)));
 
   /* ---------- intro curtain ---------- */
   const strips = $$('.curtain__strip');
@@ -114,23 +106,15 @@
   gsap.set('.hero__glow', { x: innerWidth * 0.7, y: innerHeight * 0.4 });
   addEventListener('pointermove', e => { if (activeIdx === 0) { glowX(e.clientX); glowY(e.clientY); } });
 
-  /* ---------- counters ---------- */
-  const runCounters = pane => $$('.num', pane).forEach(n => liveReady.then(() => {
-    const end = +n.dataset.count, o = { v: 0 };
-    gsap.to(o, {
-      v: end, duration: end > 1000 ? 2.6 : 1.8, delay: 0.5, ease: 'power3.out',
-      onUpdate: () => (n.textContent = fmt(o.v, n.dataset.sep)),
-      onComplete: () => gsap.fromTo(n, { scale: 1.08 }, { scale: 1, duration: 0.6, ease: 'back.out(3)' })
-    });
-  }));
-
   /* ---------- the pane engine ----------
-     One master timeline drives the whole site: every pane has a "rest" range where the visitor
-     is locked in (free scrolling = in-pane content like the horizontal cards), then a small
-     margin, then the next pane slides up. Releasing the scroll snaps to the next rest point. */
-  const T = 1;          // slide duration (timeline units)
-  const MARGIN = 0.3;   // dwell scroll before the next pane lets go
-  let tl, unit, rest = [], total = 1, activeIdx = 0, seenUpTo = 0;
+     One master timeline, driven 1:1 by scroll distance (no smoothing, no snapping), runs the whole site:
+       slide-in  →  content plays (scrub: reverses when you scroll back)  →  in-pane scroll  →  margin  →  next slide.
+     Everything inside a pane (headline, cards, counters, chart, quote) is a tween on this timeline,
+     so it moves with the scrollbar in both directions. */
+  const T = 0.9;        // slide length, in timeline units (1 unit = 0.8 screen heights of scroll)
+  const MARGIN = 0.25;  // breathing room after a pane finishes, before the next one slides up
+  const DWELL = { problem: 0.9, philosophy: 1.0, what: 0.35, team: 0.6, why: 0.7, experience: 1.0, testimonial: 1.5, contact: 0.5 };
+  let tl, unit, rest = [], total = 1, activeIdx = 0;
   let resizeT;
 
   function setActive(i) {
@@ -142,10 +126,42 @@
       idx.textContent = panes[i].dataset.label;
     }
   }
-  function markSeen(i) {
-    if (panes[i].classList.contains('is-seen')) return;
-    panes[i].classList.add('is-seen');
-    runCounters(panes[i]);
+
+  // scroll-linked content for one pane: every piece gets a slice [a, b] of the pane's content window
+  function addContent(pane, cs, L) {
+    const P = f => cs + f * L;
+    const seq = (els, from, to, a, b, ease = 'power2.out') => {
+      if (!els.length) return;
+      const span = (b - a) * L, dur = span * 0.55, each = els.length > 1 ? (span - dur) / (els.length - 1) : 0;
+      tl.fromTo(els, from, { ...to, duration: dur, ease, stagger: each }, P(a));
+    };
+    const words = $$('.split-words:not(.quote) .w > span', pane);
+    seq(words, { yPercent: 112 }, { yPercent: 0 }, 0, 0.3);
+
+    const qm = $$('.quote-mark', pane);
+    seq(qm, { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, 0, 0.15);
+
+    const fades = $$('.fade-up', pane).filter(el => !el.classList.contains('quote__by'));
+    seq(fades, { opacity: 0, y: 44 }, { opacity: 1, y: 0 }, 0.15, 0.6);
+
+    $$('.quote .w > span', pane).forEach((w, k, all) =>
+      tl.fromTo(w, { opacity: 0.12 }, { opacity: 1, duration: (0.7 * L) / all.length * 2, ease: 'none' }, P(0.2) + (k / all.length) * 0.7 * L));
+    seq($$('.quote__by', pane), { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, 0.88, 1);
+
+    $$('.chart__line', pane).forEach(path => {
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      tl.fromTo(path, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.6 * L, ease: 'none' }, P(0.25));
+    });
+    seq($$('.chart__dots, .chart__tag', pane), { opacity: 0 }, { opacity: 1 }, 0.82, 1, 'none');
+    $$('.why__half--yes', pane).forEach(el =>
+      tl.fromTo(el, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.4 * L, ease: 'power2.inOut' }, P(0.4)));
+
+    $$('.num', pane).forEach(n => {
+      const end = +n.dataset.count, o = { v: 0 };
+      n.textContent = fmt(0, n.dataset.sep);
+      tl.fromTo(o, { v: 0 }, { v: end, duration: 0.7 * L, ease: 'power1.out', onUpdate: () => (n.textContent = fmt(o.v, n.dataset.sep)) }, P(0.3));
+    });
   }
 
   function build() {
@@ -154,6 +170,7 @@
     gsap.set(panes, { clearProps: 'transform' });
     gsap.set('.pane-inner', { clearProps: 'transform' });
     gsap.set('.hscroll__track', { clearProps: 'transform' });
+    gsap.set($$('.fade-up, .quote-mark, .chart__dots, .chart__tag, .why__half--yes, .quote .w > span, .split-words:not(.quote):not(.hero__lead) .w > span', $('.stage')), { clearProps: 'opacity,transform,clipPath' });
 
     unit = innerHeight * 0.8;
     const isMobile = matchMedia('(max-width: 700px)').matches;
@@ -165,12 +182,15 @@
       if (i > 0) {
         const start = t + MARGIN;
         gsap.set(pane, { yPercent: 115 });
-        tl.fromTo(pane, { yPercent: 115 }, { yPercent: 0, duration: T, ease: 'power2.inOut', immediateRender: false }, start);
-        tl.to(panes[i - 1], { yPercent: -14, duration: T, ease: 'power2.inOut' }, start);
+        tl.fromTo(pane, { yPercent: 115 }, { yPercent: 0, duration: T, ease: 'none', immediateRender: false }, start);
+        tl.to(panes[i - 1], { yPercent: -14, duration: T, ease: 'none' }, start);
         t = start + T;
       }
       const rs = t;
-      // in-pane scrolling: the horizontal cards, or any content taller than the screen
+      const D = DWELL[pane.id] || 0;
+      if (D) addContent(pane, rs - T * 0.5, T * 0.5 + D);
+      t = rs + D;
+      // then in-pane scrolling: the horizontal cards, or any content taller than the screen
       const inner = $('.pane-inner', pane);
       const overflow = Math.max(0, inner.scrollHeight - innerHeight);
       const track = pane.id === 'what' && !isMobile ? $('.hscroll__track') : null;
@@ -178,14 +198,14 @@
       if (track) {
         const dist = Math.max(0, track.scrollWidth - innerWidth + gutter());
         span = dist / unit;
-        tl.to(track, { x: -dist, duration: span }, rs);
-        tl.to('.hscroll__bgtext', { x: -dist * 0.2, duration: span }, rs);
+        tl.to(track, { x: -dist, duration: span }, t);
+        tl.to('.hscroll__bgtext', { x: -dist * 0.2, duration: span }, t);
       } else if (overflow > 40) {
         span = overflow / unit;
-        tl.to(inner, { y: -overflow, duration: span }, rs);
+        tl.to(inner, { y: -overflow, duration: span }, t);
       }
-      t = rs + span;
-      rest.push({ rs, re: t });
+      rest.push({ rs, ready: rs + D });
+      t += span;
     });
     total = t;
     tl.set({}, {}, total); // pad to exact length
@@ -193,31 +213,12 @@
     const space = $('#space');
     space.style.height = (total * unit + innerHeight) + 'px';
 
-    const snapTo = (v, self) => {
-      const time = v * total;
-      for (let i = 0; i < N; i++) {
-        if (time >= rest[i].rs - 1e-4 && time <= rest[i].re + 1e-4) return v;      // locked in a pane
-        const next = rest[i + 1];
-        if (next && time > rest[i].re + 1e-4 && time < next.rs - 1e-4) {                          // between panes
-          const to = self.direction > 0 ? next.rs : rest[i].re;
-          return to / total;
-        }
-      }
-      return v;
-    };
-
-    ScrollTrigger.create({
-      animation: tl, trigger: space, start: 'top top', end: 'bottom bottom', scrub: 0.45,
-      snap: { snapTo, delay: 0.12, duration: { min: 0.35, max: 0.9 }, ease: 'power2.inOut' }
-    });
+    ScrollTrigger.create({ animation: tl, trigger: space, start: 'top top', end: 'bottom bottom', scrub: true });
 
     tl.eventCallback('onUpdate', () => {
       const time = tl.time();
       let a = 0;
-      for (let i = 1; i < N; i++) {
-        if (time >= rest[i].rs - T * 0.5) a = i;
-        if (time >= rest[i].rs - T * 0.8) markSeen(i);   // start revealing as the pane begins to slide
-      }
+      for (let i = 1; i < N; i++) if (time >= rest[i].rs - T * 0.5) a = i;
       setActive(a);
       gsap.set('.index__line i', { scaleY: tl.progress() });
     });
@@ -227,11 +228,11 @@
     tl.time(tl.scrollTrigger.progress * total);
   }
 
-  const start = () => { build(); };
+  const start = () => liveReady.then(build);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else addEventListener('load', start);
   addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(build, 250); });
 
-  /* ---------- page-transition jumps (nav links) ---------- */
+  /* ---------- page-transition jumps (rail buttons) ---------- */
   let jumping = false;
   $$('[data-jump]').forEach(a => a.addEventListener('click', e => {
     const target = document.querySelector(a.getAttribute('href'));
@@ -245,11 +246,9 @@
       .set('.curtain', { pointerEvents: 'auto' })
       .to(strips, { scaleY: 1, duration: 0.7, ease: 'power4.inOut', stagger: 0.06 })
       .add(() => {
-        const time = rest[i].rs;
-        scrollTo(0, (time / total) * total * unit);
+        const time = rest[i].ready;
+        scrollTo(0, time * unit);
         tl.time(time);
-        for (let k = 0; k <= i; k++) panes[k].classList.add('is-seen');
-        runCounters(panes[i]);
         history.replaceState(null, '', a.getAttribute('href'));
       })
       .set(strips, { transformOrigin: 'bottom' })

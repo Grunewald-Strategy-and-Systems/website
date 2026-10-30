@@ -121,7 +121,7 @@ body.is-loading .curtain{pointer-events:auto}
 .hscroll__head{padding-bottom:clamp(8px,2vh,24px)}
 .hscroll__head .display{max-width:none}
 .hscroll__viewport{width:100%;overflow:visible}
-.hscroll__track{display:flex;gap:clamp(18px,2.4vw,40px);padding:0 var(--gutter);width:max-content;align-items:stretch;will-change:transform}
+.hscroll__track{display:flex;gap:clamp(18px,2.4vw,40px);padding:0 var(--gutter) 0 max(var(--gutter),calc((100vw - 1320px)/2 + var(--gutter)));width:max-content;align-items:stretch;will-change:transform}
 .panel{flex:none;width:clamp(280px,32vw,520px);height:clamp(240px,42vh,420px);padding:clamp(24px,3vw,44px);display:flex;flex-direction:column;justify-content:space-between;border:1px solid rgba(69,4,4,.18);background:var(--white);position:relative}
 .panel--intro,.panel--outro{border:none;background:none;padding-left:0;justify-content:center;gap:24px;width:clamp(280px,30vw,460px)}
 .panel--outro{width:clamp(300px,36vw,560px)}
@@ -248,21 +248,9 @@ html:not(.js) .hscroll__track{flex-wrap:wrap;width:auto}
 .js .pane-inner{padding:clamp(48px,9vh,96px) 0 clamp(32px,6vh,64px);will-change:transform}
 .js .scroll-space{width:1px;pointer-events:none}
 
-/* reveal choreography: fires once, as each pane starts sliding in */
-.js .fade-up{opacity:0;transform:translateY(44px);transition:opacity 1s ease var(--d,0s),transform 1.1s cubic-bezier(.16,1,.3,1) var(--d,0s),background .5s}
-.js .is-seen .fade-up{opacity:1;transform:none}
-.js .split-words .w>span{transform:translateY(112%);transition:transform 1.1s cubic-bezier(.16,1,.3,1) calc(var(--i,0)*.045s + .25s)}
-.js .is-seen .split-words .w>span{transform:none}
-.js .quote .w>span{transform:none;opacity:.12;transition:opacity .9s ease calc(var(--i,0)*.075s + .4s)}
-.js .is-seen .quote .w>span{opacity:1}
-.js .chart__line{transition:stroke-dashoffset 2.6s cubic-bezier(.65,0,.35,1) .5s}
-.js .is-seen .chart__line{stroke-dashoffset:0!important}
-.js .chart__dots,.js .chart__tag{opacity:0;transition:opacity .8s ease 2.4s}
-.js .is-seen .chart__dots,.js .is-seen .chart__tag{opacity:1}
-.js .why__half--yes{clip-path:inset(0 0 100% 0);transition:clip-path 1.2s cubic-bezier(.76,0,.24,1) .9s}
-.js .is-seen .why__half--yes{clip-path:inset(0)}
-.js .quote-mark{opacity:0;transform:translateY(30px);transition:opacity 1s ease,transform 1.2s cubic-bezier(.16,1,.3,1)}
-.js .is-seen .quote-mark{opacity:1;transform:none}
+/* hero tagline (time-based intro); every other reveal is scroll-linked in main.js */
+.js .hero .split-words .w>span{transform:translateY(112%);transition:transform 1.1s cubic-bezier(.16,1,.3,1) calc(var(--i,0)*.045s + .25s)}
+.js .hero.is-seen .split-words .w>span{transform:none}
 
 /* fit each pane inside one screen */
 .problem .display,.experience .display{font-size:clamp(32px,min(5.2vw,8.6vh),88px)}
@@ -283,3 +271,11 @@ html:not(.js) .hscroll__track{flex-wrap:wrap;width:auto}
 @media (max-width:960px){.problem__foot{flex-direction:column;align-items:flex-start}.problem__foot .problem__verdict{text-align:left}}
 .problem__big{font-size:clamp(30px,min(4.6vw,9vh),84px)}
 .foot__logo{mix-blend-mode:lighten}
+
+/* service cards: roomier now that the copy is longer */
+.panel{width:clamp(300px,34vw,540px);height:clamp(280px,50vh,440px)}
+.panel__n{font-size:clamp(56px,min(7vw,11vh),112px)}
+.panel h3{font-size:clamp(26px,min(2.8vw,4.6vh),42px);margin-top:auto}
+.panel p{margin-top:12px;max-width:36ch}
+.panel--intro,.panel--outro{justify-content:center}
+.panel--intro h3,.panel--outro h3{margin-top:0}
