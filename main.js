@@ -107,11 +107,12 @@
   addEventListener('pointermove', e => { if (activeIdx === 0) { glowX(e.clientX); glowY(e.clientY); } });
 
   /* ---------- the pane engine ----------
-     One master timeline, driven 1:1 by scroll distance (no smoothing, no snapping), runs the whole site:
+     One master timeline, driven by scroll distance (eased gently, never snapped), runs the whole site:
        slide-in  →  content plays (scrub: reverses when you scroll back)  →  in-pane scroll  →  margin  →  next slide.
      Everything inside a pane (headline, cards, counters, chart, quote) is a tween on this timeline,
      so it moves with the scrollbar in both directions. */
-  const T = 0.9;        // slide length, in timeline units (1 unit = 0.8 screen heights of scroll)
+  const T = 0.9;        // slide length, in timeline units (1 unit = 1.1 screen heights of scroll)
+  const IN_PANE = 0.5;  // in-pane scrolling (cards, tall content) moves at half speed: 2px of scroll per 1px of travel
   const MARGIN = 0.25;  // breathing room after a pane finishes, before the next one slides up
   const DWELL = { problem: 0.9, philosophy: 1.0, what: 0.35, team: 0.6, why: 0.7, experience: 1.0, testimonial: 1.5, contact: 0.5 };
   let tl, unit, rest = [], total = 1, activeIdx = 0;
@@ -172,7 +173,7 @@
     gsap.set('.hscroll__track', { clearProps: 'transform' });
     gsap.set($$('.fade-up, .quote-mark, .chart__dots, .chart__tag, .why__half--yes, .quote .w > span, .split-words:not(.quote):not(.hero__lead) .w > span', $('.stage')), { clearProps: 'opacity,transform,clipPath' });
 
-    unit = innerHeight * 0.8;
+    unit = innerHeight * 1.1;
     const isMobile = matchMedia('(max-width: 700px)').matches;
     tl = gsap.timeline({ defaults: { ease: 'none' } });
     rest = [];
@@ -197,11 +198,11 @@
       let span = 0;
       if (track) {
         const dist = Math.max(0, track.scrollWidth - innerWidth + gutter());
-        span = dist / unit;
+        span = dist / (unit * IN_PANE);
         tl.to(track, { x: -dist, duration: span }, t);
         tl.to('.hscroll__bgtext', { x: -dist * 0.2, duration: span }, t);
       } else if (overflow > 40) {
-        span = overflow / unit;
+        span = overflow / (unit * IN_PANE);
         tl.to(inner, { y: -overflow, duration: span }, t);
       }
       rest.push({ rs, ready: rs + D });
@@ -213,7 +214,7 @@
     const space = $('#space');
     space.style.height = (total * unit + innerHeight) + 'px';
 
-    ScrollTrigger.create({ animation: tl, trigger: space, start: 'top top', end: 'bottom bottom', scrub: true });
+    ScrollTrigger.create({ animation: tl, trigger: space, start: 'top top', end: 'bottom bottom', scrub: 1 });
 
     tl.eventCallback('onUpdate', () => {
       const time = tl.time();
