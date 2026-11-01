@@ -24,7 +24,7 @@
 <aside class="rail" id="rail" aria-label="Site navigation">
   <span class="rail__now index__now" aria-hidden="true">01</span>
   <span class="rail__line index__line" aria-hidden="true"><i></i></span>
-  <span class="rail__total" aria-hidden="true">09</span>
+  <span class="rail__total" aria-hidden="true">07</span>
   <a href="#hero" data-jump class="rail__btn rail__btn--first" aria-label="Back to top" title="Home">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h4.5v-5.5h4v5.5h4.5V10"/></svg>
   </a>
@@ -76,8 +76,120 @@
 </div>
 </section>
 
-<!-- 2 · THE PROBLEM -->
-<section id="problem" class="sec sec--dark problem" data-label="02">
+<!-- 2 · RESULTS (live) -->
+<section id="results" class="sec sec--dark results" data-label="02">
+<div class="pane-inner">
+  <div class="wrap">
+    <p class="kicker"><span>02</span>Results</p>
+    <h2 class="display split-words">Results, measured.</h2>
+
+    <!-- Live figures: list your back-end endpoints in GSS_LIVE_URLS (main.js). Until then these show the fallback numbers below. -->
+    <div class="results__grid">
+      <article class="stat-card fade-up" data-live-card>
+        <span class="stat-card__label">Costs Saved <em class="live-tag" hidden>Live</em></span>
+        <span class="stat-card__value"><span class="cur">$</span><span class="num" data-count="1750" data-sep="," data-live-key="money">1750</span></span>
+        <small>back in the pockets of the businesses we work with</small>
+      </article>
+      <article class="stat-card fade-up" data-live-card>
+        <span class="stat-card__label">Hours Saved <em class="live-tag" hidden>Live</em></span>
+        <span class="stat-card__value"><span class="num" data-count="60" data-live-key="hours">60</span></span>
+        <small>of manual work handed back to their teams</small>
+      </article>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 3 · WHAT WE DO (horizontal scroll) -->
+<section id="what" class="sec sec--cream hscroll" data-label="03">
+<div class="pane-inner">
+  <div class="hscroll__bgtext" aria-hidden="true">Efficiency</div>
+  <div class="hscroll__head wrap">
+    <p class="kicker"><span>03</span>What We Do</p>
+    <h2 class="display">This is what we do.</h2>
+  </div>
+
+  <div class="hscroll__viewport">
+    <div class="hscroll__track">
+      <article class="fade-up panel panel--intro">
+        <p class="body-lg">We develop custom software and integrate AI, automation, and data cleaning into your operations, so the way you work lines up with your strategy.</p>
+        <span class="panel__hint">Two parts <i></i></span>
+      </article>
+
+      <article class="fade-up panel panel--card">
+        <span class="panel__n">01</span>
+        <h3>Clarify your strategy</h3>
+        <p>We meet with you and your team to understand your goals and limiting factors, and get clear on where the business is going.</p>
+      </article>
+
+      <article class="fade-up panel panel--card panel--maroon">
+        <span class="panel__n">02</span>
+        <h3>Align your operations</h3>
+        <p>We build and integrate the software, AI, automations, and clean data that make daily operations serve that strategy.</p>
+      </article>
+
+      <article class="fade-up panel panel--case panel--maroon">
+        <span class="case__tag">Case study · Freight forwarding</span>
+        <p class="display display--sm">See the work.</p>
+        <p>Tradelane Management ran every operation out of Outlook, taking in over <strong>200 emails a day</strong>. We built them a custom automation platform to handle the flood, so the business could grow and the manual labor could go.</p>
+      </article>
+
+      <article class="fade-up panel panel--show" data-show="inbox">
+        <header class="show__head"><span class="show__n">Step 1</span><h3>An inbox running the business</h3><p>Every filing, notice and customs document landed in one shared mailbox, sorted and filed by hand.</p></header>
+        <div class="mock mock--inbox" aria-hidden="true">
+          <div class="mock__bar"><i></i><i></i><i></i><span>Inbox</span><b><span class="mini-count" data-mini="212">212</span> new today</b></div>
+          <div class="mrow m-a"><span class="mrow__dot"></span><span class="mrow__subj">Importer Security Filing — House B/L</span><em>ISF</em></div><div class="mrow m-a"><span class="mrow__dot"></span><span class="mrow__subj">Arrival notice — vessel docking</span><em>Arrival Notice</em></div><div class="mrow m-a"><span class="mrow__dot"></span><span class="mrow__subj">Bill of lading, packing list, invoice</span><em>Customs Docs</em></div><div class="mrow m-a"><span class="mrow__dot"></span><span class="mrow__subj">Confirmation — filing on record</span><em>ISF Confirmation</em></div><div class="mrow m-a"><span class="mrow__dot"></span><span class="mrow__subj">Delivery order issued</span><em>Delivery Order</em></div><div class="mrow m-a"><span class="mrow__dot"></span><span class="mrow__subj">Entry summary — CBP 7501</span><em>Entry Form</em></div><div class="mrow m-a"><span class="mrow__dot"></span><span class="mrow__subj">Release — cargo cleared</span><em>Release</em></div>
+        </div>
+      </article>
+
+      <article class="fade-up panel panel--show" data-show="read">
+        <header class="show__head"><span class="show__n">Step 2</span><h3>It reads every email for you</h3><p>Each message is classified, the attachment is read, and the key fields are pulled out and matched to the right shipment.</p></header>
+        <div class="mock mock--read" aria-hidden="true">
+          <div class="doc">
+            <u class="w40"></u><u class="w90"></u><u class="w70"></u><u class="hl m-a w80"></u><u class="w60"></u><u class="hl m-a w55"></u><u class="w90"></u><u class="hl m-a w65"></u><u class="w45"></u>
+          </div>
+          <div class="fields">
+            <div class="fld m-a"><small>Document</small><b>Arrival Notice</b></div>
+            <div class="fld m-a"><small>Matched shipment</small><b>Found automatically</b></div>
+            <div class="fld m-a"><small>Port of discharge</small><b>Los Angeles</b></div>
+            <div class="fld m-a"><small>Status</small><b>Ready to confirm</b></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="fade-up panel panel--show" data-show="track">
+        <header class="show__head"><span class="show__n">Step 3</span><h3>Every shipment, step by step</h3><p>A live checklist per shipment ticks itself as documents arrive, so nothing quietly falls through the cracks.</p></header>
+        <div class="mock mock--track" aria-hidden="true">
+          <div class="pbar"><i class="m-a"></i></div>
+          <div class="pbar__txt"><span>Shipment progress</span><b class="mini-count" data-mini="78" data-suffix="%">78%</b></div>
+          <ul class="checklist"><li><span class="tick m-a"></span>ISF received</li><li><span class="tick m-a"></span>Reply sent to sender</li><li><span class="tick m-a"></span>Filed with customs broker</li><li><span class="tick m-a"></span>Arrival notice received</li><li><span class="tick m-a"></span>Fees paid · proof sent</li><li><span class="tick m-a"></span>Customs docs split &amp; filed</li><li><span class="tick m-a"></span>Delivery order issued</li><li><span class="tick tick--off"></span>Released by customs</li><li><span class="tick tick--off"></span>Sent to trucker</li></ul>
+        </div>
+      </article>
+
+      <article class="fade-up panel panel--show" data-show="act">
+        <header class="show__head"><span class="show__n">Step 4</span><h3>The follow-up happens on its own</h3><p>Replies, filings, signed letters and hand-offs go out automatically, or wait for a one-click approval.</p></header>
+        <div class="mock mock--act" aria-hidden="true"><div class="act m-a"><span class="tick tick--on"></span><span>Replied to the sender</span><small>automatic</small></div><div class="act m-a"><span class="tick tick--on"></span><span>Filed with the customs broker</span><small>automatic</small></div><div class="act m-a"><span class="tick tick--on"></span><span>Guarantee letter signed</span><small>automatic</small></div><div class="act m-a"><span class="tick tick--on"></span><span>Proof of payment emailed</span><small>automatic</small></div><div class="act m-a"><span class="tick tick--on"></span><span>Trucker notified</span><small>automatic</small></div></div>
+      </article>
+
+      <article class="fade-up panel panel--out panel--maroon" data-show="out">
+        <span class="case__tag">The result</span>
+        <p class="out__line m-a"><b>200+</b> emails a day, read, sorted and filed automatically.</p>
+        <p class="out__line m-a"><b>Every</b> shipment tracked, with nothing left to memory.</p>
+        <p class="out__line m-a"><b>A team</b> free to grow the business instead of feeding the inbox.</p>
+        <small class="out__note">Interface shown is simplified and illustrative.</small>
+      </article>
+
+      <article class="fade-up panel panel--outro">
+        <p class="display display--sm">Sounds too good to be true?</p>
+        <p class="body-lg">Talk with us <a href="#contact" data-jump class="ulink">here</a>.</p>
+      </article>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 4 · THE PROBLEM -->
+<section id="problem" class="sec sec--dark problem" data-label="04">
 <div class="pane-inner">
   <div class="marquee" aria-hidden="true">
     <div class="marquee__track">
@@ -86,7 +198,7 @@
     </div>
   </div>
   <div class="wrap problem__inner">
-    <p class="kicker"><span>02</span>The Problem</p>
+    <p class="kicker"><span>04</span>The Problem</p>
     <h2 class="display split-words">We live in a time of absolute overworking.</h2>
 
     <div class="problem__cols">
@@ -112,12 +224,12 @@
 </div>
 </section>
 
-<!-- 3 · PHILOSOPHY -->
-<section id="philosophy" class="sec sec--light philosophy" data-label="03">
+<!-- 5 · THE SOLUTION -->
+<section id="philosophy" class="sec sec--light philosophy" data-label="05">
 <div class="pane-inner">
   <div class="wrap philosophy__grid">
     <div class="philosophy__copy">
-      <p class="kicker"><span>03</span>Our Philosophy</p>
+      <p class="kicker"><span>05</span>The Solution</p>
       <h2 class="display split-words">Flip it on its head.</h2>
       <p class="body-lg fade-up">
         Instead of arguing against this philosophy, the GS&amp;S team seeks to flip it on its head.
@@ -154,49 +266,12 @@
 </div>
 </section>
 
-<!-- 4 · WHAT WE DO (horizontal scroll) -->
-<section id="what" class="sec sec--cream hscroll" data-label="04">
-<div class="pane-inner">
-  <div class="hscroll__bgtext" aria-hidden="true">Efficiency</div>
-  <div class="hscroll__head wrap">
-    <p class="kicker"><span>04</span>What We Do</p>
-    <h2 class="display">This is what we do.</h2>
-  </div>
-
-  <div class="hscroll__viewport">
-    <div class="hscroll__track">
-      <article class="fade-up panel panel--intro">
-        <p class="body-lg">We develop custom software and integrate AI, automation, and data cleaning into your operations, so the way you work lines up with your strategy.</p>
-        <span class="panel__hint">Two parts <i></i></span>
-      </article>
-
-      <article class="fade-up panel panel--card">
-        <span class="panel__n">01</span>
-        <h3>Clarify your strategy</h3>
-        <p>We meet with you and your team to understand your goals and limiting factors, and get clear on where the business is going.</p>
-      </article>
-
-      <article class="fade-up panel panel--card panel--maroon">
-        <span class="panel__n">02</span>
-        <h3>Align your operations</h3>
-        <p>We build and integrate the software, AI, automations, and clean data that make daily operations serve that strategy.</p>
-      </article>
-
-      <article class="fade-up panel panel--outro">
-        <p class="display display--sm">Sounds too good to be true?</p>
-        <p class="body-lg">Talk with us <a href="#contact" data-jump class="ulink">here</a> or see our <a href="#experience" data-jump class="ulink">client stories</a>.</p>
-      </article>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- 5 · TEAM -->
-<section id="team" class="sec sec--dark team" data-label="05">
+<!-- 6 · TEAM -->
+<section id="team" class="sec sec--light team" data-label="06">
 <div class="pane-inner">
   <div class="wrap team__grid">
     <div>
-      <p class="kicker"><span>05</span>Our Team</p>
+      <p class="kicker"><span>06</span>Our Team</p>
       <h2 class="display split-words">Real people. Real impact.</h2>
     </div>
     <div class="team__copy">
@@ -224,81 +299,8 @@
 </div>
 </section>
 
-<!-- 6 · WHY STRATEGY & SYSTEMS -->
-<section id="why" class="sec sec--light why" data-label="06">
-<div class="pane-inner">
-  <div class="wrap">
-    <p class="kicker"><span>06</span>Why Strategy &amp; Systems?</p>
-    <h2 class="display split-words">First, understand <em>why.</em></h2>
-    <div class="why__grid">
-      <p class="body-lg fade-up">
-        We believe that to do anything, you first need to understand why you do the work you do.
-        That's why we spend the first phase of our engagement getting to know you, your team, your mission, and how we can help.
-      </p>
-      <div class="why__pair fade-up">
-        <div class="why__half why__half--no">
-          <small>We don't just</small>
-          <p>build you a solution.</p>
-        </div>
-        <div class="why__half why__half--yes">
-          <small>We help you</small>
-          <p>identify your underlying issues, and then address those.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- 7 · EXPERIENCE -->
-<section id="experience" class="sec sec--dark experience" data-label="07">
-<div class="pane-inner">
-  <div class="wrap">
-    <p class="kicker"><span>07</span>Experience</p>
-    <h2 class="display split-words">Results, measured.</h2>
-
-    <div class="exp__grid">
-      <article class="exp exp--lead fade-up">
-        <h3>Shipping &amp; Forwarding</h3>
-        <!-- Live figures: set GSS_LIVE_URL in main.js to your dashboard endpoint. Until then these show the fallback values below. -->
-        <div class="exp__stats" data-live>
-          <div><span class="num" data-count="60" data-live-key="hours">60</span><small>work hours saved <em class="live-tag" hidden>Live</em></small></div>
-          <div><span class="cur">$</span><span class="num" data-count="1750" data-sep="," data-live-key="money">1750</span><small>saved <em class="live-tag" hidden>Live</em></small></div>
-        </div>
-      </article>
-
-      <article class="exp fade-up">
-        <h3>Property Management</h3>
-        <p>Data organization, dashboards, org exports</p>
-        <ul class="exp__chips"><li>Data</li><li>Dashboards</li><li>Exports</li></ul>
-      </article>
-
-      <article class="exp fade-up">
-        <h3>AI &amp; Tech</h3>
-        <p>Expanded strategic objectives and assisted in raising the first</p>
-        <span class="exp__big"><span class="cur">$</span><span class="num" data-count="1000000" data-sep=",">1000000</span></span>
-        <p class="exp__sub">in seed funding</p>
-      </article>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- 8 · TESTIMONIAL -->
-<section id="testimonial" class="sec sec--light testimonial" data-label="08">
-<div class="pane-inner">
-  <div class="wrap">
-    <span class="quote-mark" aria-hidden="true">“</span>
-    <blockquote class="quote split-words">
-      We looked for someone who could improve our system for 2 years and couldn't find any. We were close to closing our company and selling off our clients, until we found Grunewald S&amp;S. They saved our company and revolutionized the way we work.
-    </blockquote>
-    <p class="quote__by fade-up"><span class="diamond"></span>Larry Nass, Tradelane Management LLC</p>
-  </div>
-</div>
-</section>
-
-<!-- 9 · CONTACT / FOOTER -->
-<section id="contact" class="sec sec--dark contact" data-label="09">
+<!-- 7 · CONTACT / FOOTER -->
+<section id="contact" class="sec sec--dark contact" data-label="07">
 <div class="pane-inner">
   <div class="contact__rings" aria-hidden="true">
     <svg viewBox="0 0 1200 1200" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="#B8860B" stroke-width="1">
@@ -306,7 +308,7 @@
     </g></svg>
   </div>
   <div class="wrap contact__inner">
-    <p class="kicker"><span>09</span>Talk with us</p>
+    <p class="kicker"><span>07</span>Talk with us</p>
     <h2 class="display display--xl split-words">Ready to reclaim your time?</h2>
     <a class="btn magnetic" href="mailto:birkley.grunewald@gmail.com"><span>Start a conversation</span><i>→</i></a>
     <footer class="foot">

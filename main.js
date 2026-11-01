@@ -6,18 +6,25 @@
   const fmt = (n, sep) => (sep ? Math.round(n).toLocaleString('en-US') : String(Math.round(n)));
   const finalNum = n => fmt(+n.dataset.count, n.dataset.sep);
 
-  // Live "time saved / money saved" feed. Set to your dashboard endpoint returning
-  // JSON like {"hours": 60, "money": 1750}. Empty = keep the static fallback numbers in index.html.
-  const GSS_LIVE_URL = '';
-  const liveReady = !GSS_LIVE_URL ? Promise.resolve() : fetch(GSS_LIVE_URL, { headers: { Accept: 'application/json' } })
-    .then(r => (r.ok ? r.json() : Promise.reject()))
-    .then(d => $$('[data-live-key]').forEach(n => {
-      const v = Number(d[n.dataset.liveKey]);
-      if (!isFinite(v)) return;
-      n.dataset.count = v;
-      const tag = $('.live-tag', n.parentElement); if (tag) tag.hidden = false;
-    }))
-    .catch(() => {});
+  // Live "costs saved / hours saved" totals. List the JSON endpoints of the back ends to add up, each returning
+  // {"hours": 60, "money": 1750}; the page sums them. Empty = keep the fallback numbers written in index.html.
+  // (Endpoints must be public, read-only, aggregate-only and allow CORS for this site.)
+  const GSS_LIVE_URLS = [];
+  const LIVE_POLL_MS = 60000;
+  const fetchLive = () => Promise.all(GSS_LIVE_URLS.map(u => fetch(u, { headers: { Accept: 'application/json' } })
+    .then(r => (r.ok ? r.json() : Promise.reject())).catch(() => null)))
+    .then(all => {
+      const got = all.filter(Boolean);
+      if (!got.length) return false;
+      let changed = false;
+      $$('[data-live-key]').forEach(n => {
+        const v = got.reduce((sum, d) => sum + (Number(d[n.dataset.liveKey]) || 0), 0);
+        if (+n.dataset.count !== v) { n.dataset.count = v; changed = true; }
+        const tag = $('.live-tag', n.closest('[data-live-card]') || document); if (tag) tag.hidden = false;
+      });
+      return changed;
+    });
+  const liveReady = GSS_LIVE_URLS.length ? fetchLive().catch(() => {}) : Promise.resolve();
 
   // Static fallback: reduced motion, or GSAP failed to load → plain scrolling page.
   if (!root.classList.contains('js') || !window.gsap || !window.ScrollTrigger) {
@@ -37,6 +44,7 @@
 
   const panes = $$('.sec');
   const N = panes.length;
+  $('.rail__total').textContent = String(N).padStart(2, '0');
   const gutter = () => parseFloat(getComputedStyle(root).getPropertyValue('--gutter')) || 0;
 
   /* ---------- text splitting ---------- */
@@ -112,9 +120,10 @@
      Everything inside a pane (headline, cards, counters, chart, quote) is a tween on this timeline,
      so it moves with the scrollbar in both directions. */
   const T = 0.9;        // slide length, in timeline units (1 unit = 1.1 screen heights of scroll)
-  const IN_PANE = 0.5;  // in-pane scrolling (cards, tall content) moves at half speed: 2px of scroll per 1px of travel
+  const IN_PANE = 0.5;
+  const IN_PANE_WHAT = 0.65; // the long case-study track scrolls a touch faster so it doesn't drag  // in-pane scrolling (cards, tall content) moves at half speed: 2px of scroll per 1px of travel
   const MARGIN = 0.25;  // breathing room after a pane finishes, before the next one slides up
-  const DWELL = { problem: 0.9, philosophy: 1.0, what: 0.35, team: 0.6, why: 0.7, experience: 1.0, testimonial: 1.5, contact: 0.5 };
+  const DWELL = { results: 1.0, what: 0.35, problem: 0.9, philosophy: 1.0, team: 0.6, contact: 0.5 };
   let tl, unit, rest = [], total = 1, activeIdx = 0;
   let resizeT;
 
@@ -165,13 +174,54 @@
     });
   }
 
+  // The case-study mock-ups animate as their panel travels into view (scroll-linked, reversible)
+  function addShowcase(track, t0, span, dist) {
+    const trackLeft = track.getBoundingClientRect().left;
+    const W = innerWidth, rs = t0 - DWELL.what - 0;
+    const win = el => {
+      const left = el.getBoundingClientRect().left - trackLeft;
+      const s = Math.max(rs + 0.05, t0 + span * ((left - 0.92 * W) / dist));
+      const e = Math.max(s + 0.12, t0 + span * ((left - 0.4 * W) / dist));
+      return [s, e - s];
+    };
+    const seq = (els, from, to, s, d, ease = 'power2.out') => {
+      if (!els.length) return;
+      const dur = d * 0.55, each = els.length > 1 ? (d - dur) / (els.length - 1) : 0;
+      tl.fromTo(els, from, { ...to, duration: dur, ease, stagger: each }, s);
+    };
+    const mini = (el, s, d) => {
+      const end = +el.dataset.mini, o = { v: 0 }, suf = el.dataset.suffix || '';
+      el.textContent = '0' + suf;
+      tl.fromTo(o, { v: 0 }, { v: end, duration: d, ease: 'none', onUpdate: () => (el.textContent = Math.round(o.v) + suf) }, s);
+    };
+    $$('.panel--show', track).forEach(p => {
+      const [s, d] = win(p);
+      switch (p.dataset.show) {
+        case 'inbox':
+          seq($$('.mrow', p), { opacity: 0, x: 40 }, { opacity: 1, x: 0 }, s, d);
+          mini($('.mini-count', p), s, d); break;
+        case 'read':
+          seq($$('.hl', p), { scaleX: 0 }, { scaleX: 1 }, s, d * 0.6, 'none');
+          seq($$('.fld', p), { opacity: 0, x: 24 }, { opacity: 1, x: 0 }, s + d * 0.4, d * 0.6); break;
+        case 'track':
+          seq($$('.tick.m-a', p), { scale: 0 }, { scale: 1 }, s, d, 'back.out(2)');
+          tl.fromTo($('.pbar i', p), { scaleX: 0 }, { scaleX: 1, duration: d, ease: 'none' }, s);
+          mini($('.mini-count', p), s, d); break;
+        case 'act':
+          seq($$('.act', p), { opacity: 0, y: 24 }, { opacity: 1, y: 0 }, s, d); break;
+      }
+    });
+    const out = $('.panel--out', track);
+    if (out) { const [s, d] = win(out); seq($$('.out__line', out), { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, s, d); }
+  }
+
   function build() {
     const prevProgress = tl ? tl.progress() : 0;
     if (tl) { tl.scrollTrigger.kill(); tl.kill(); }
     gsap.set(panes, { clearProps: 'transform' });
     gsap.set('.pane-inner', { clearProps: 'transform' });
     gsap.set('.hscroll__track', { clearProps: 'transform' });
-    gsap.set($$('.fade-up, .quote-mark, .chart__dots, .chart__tag, .why__half--yes, .quote .w > span, .split-words:not(.quote):not(.hero__lead) .w > span', $('.stage')), { clearProps: 'opacity,transform,clipPath' });
+    gsap.set($$('.fade-up, .quote-mark, .chart__dots, .chart__tag, .why__half--yes, .quote .w > span, .m-a, .split-words:not(.quote):not(.hero__lead) .w > span', $('.stage')), { clearProps: 'all' });
 
     unit = innerHeight * 1.1;
     const isMobile = matchMedia('(max-width: 700px)').matches;
@@ -197,9 +247,10 @@
       const track = pane.id === 'what' && !isMobile ? $('.hscroll__track') : null;
       let span = 0;
       if (track) {
-        const dist = Math.max(0, track.scrollWidth - innerWidth + gutter());
-        span = dist / (unit * IN_PANE);
+        const dist = Math.max(0, track.scrollWidth - (innerWidth - 84));
+        span = dist / (unit * IN_PANE_WHAT);
         tl.to(track, { x: -dist, duration: span }, t);
+        addShowcase(track, t, span, dist);
         tl.to('.hscroll__bgtext', { x: -dist * 0.2, duration: span }, t);
       } else if (overflow > 40) {
         span = overflow / (unit * IN_PANE);
@@ -230,6 +281,7 @@
   }
 
   const start = () => liveReady.then(build);
+  if (GSS_LIVE_URLS.length) setInterval(() => fetchLive().then(ch => { if (ch) build(); }).catch(() => {}), LIVE_POLL_MS);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else addEventListener('load', start);
   addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(build, 250); });
 
