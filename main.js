@@ -63,9 +63,22 @@
             const o = { v: 0 };
             tl.fromTo(o, { v: 0 }, { v: 200, duration: 0.95, ease: 'power3.in', onUpdate: () => counts.forEach(c => (c.textContent = fmtN(o.v))) }, 0);
             tl.fromTo(tray, { scale: 1 }, { scale: 1.14, duration: 0.95, ease: 'power2.in' }, 0);
+            const ring = $('.tray__ring', el);
+            tl.fromTo(ring, { scale: 0.6, opacity: 0.1 }, { scale: 1.6, opacity: 0.6, duration: 0.95, ease: 'power2.in' }, 0);
             counts.forEach(c => (c.textContent = '0'));
             break;
           }
+          case 'chaos': {
+            const chips = $$('.chip', el);
+            chips.forEach((c, i) => {
+              const sx = (rnd(i, 5) - 0.5) * 700, sy = 260 + rnd(i, 6) * 220;
+              tl.fromTo(c, { x: sx, y: sy, rotation: (rnd(i, 7) - 0.5) * 120, opacity: 0 },
+                { x: 0, y: 0, rotation: +c.dataset.rot, opacity: 1, duration: 0.45, ease: 'back.out(1.6)' }, 0.03 + (i / chips.length) * 0.5);
+            });
+            break;
+          }
+          case 'divider':
+            seq(tl, $$('.divider__line', el), { scaleX: 0 }, { scaleX: 1 }, 0.1, 0.8, 'power2.out'); break;
           case 'read':
             seq(tl, $$('.hl', el), { scaleX: 0 }, { scaleX: 1 }, 0, 0.55, 'none');
             seq(tl, $$('.fld', el), { opacity: 0, x: 24 }, { opacity: 1, x: 0 }, 0.35, 0.65); break;
@@ -83,24 +96,38 @@
       });
     };
 
-    // a scene plays while its visual travels from the lower part of the screen to the middle
+    // a card rises into place as it nears the middle; its animation plays as its visual reaches the middle
+    const parts = $$('.work__steps span', modal), prog = $('.work__prog i', modal);
+    const divider = $('[data-part-start]', modal);
     const update = () => {
       const H = panel.clientHeight, top = panel.getBoundingClientRect().top;
+      $$('.wcard', modal).forEach(card => {
+        const r = card.getBoundingClientRect(), c = r.top - top + r.height / 2;
+        const q = clamp01((H * 1.05 - c) / (H * 0.5));
+        card.style.transform = `translateY(${(1 - q) * 70}px) scale(${0.93 + 0.07 * q})`;
+        card.style.opacity = 0.35 + 0.65 * q;
+      });
       scenes.forEach(s => {
         const r = s.vis.getBoundingClientRect();
         const center = r.top - top + r.height / 2;
         s.tl.progress(clamp01((H * 0.96 - center) / (H * 0.4)));
       });
+      if (divider) {
+        const dr = divider.getBoundingClientRect(), solution = dr.top - top + dr.height / 2 < H * 0.55;
+        parts.forEach(p => p.classList.toggle('is-on', (p.dataset.part === 'solution') === solution));
+      }
+      const max = panel.scrollHeight - panel.clientHeight;
+      prog.style.transform = `scaleX(${max > 0 ? panel.scrollTop / max : 0})`;
       const atBottom = panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 3;
-      if (isOpen && atBottom && panel.scrollTop > 40) { if (!closeTimer) closeTimer = setTimeout(close, 1400); }
+      if (isOpen && atBottom && panel.scrollTop > 40) { if (!closeTimer) closeTimer = setTimeout(close, 1600); }
       else if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
     };
 
     const open = () => {
       if (isOpen) return;
       isOpen = true;
+      modal.hidden = false;   // build while visible: GSAP re-parents hidden elements while measuring them
       build();
-      modal.hidden = false;
       root.classList.add('work-open');
       panel.scrollTop = 0;
       update();
@@ -113,12 +140,11 @@
       clearTimeout(closeTimer); closeTimer = null;
       modal.classList.remove('is-open');
       root.classList.remove('work-open');
-      setTimeout(() => { if (!isOpen) { modal.hidden = true; panel.scrollTop = 0; update(); } }, 800);
+      setTimeout(() => { if (!isOpen) { modal.hidden = true; panel.scrollTop = 0; update(); } }, 950);
     }
 
     panel.addEventListener('scroll', update, { passive: true });
     addEventListener('resize', () => { if (isOpen) update(); });
-    $('.work__scrim', modal).addEventListener('wheel', e => { e.preventDefault(); panel.scrollTop += e.deltaY; }, { passive: false });
     $$('[data-open-work]').forEach(b => b.addEventListener('click', open));
     $$('[data-close-work]', modal).forEach(b => b.addEventListener('click', close));
     addEventListener('keydown', e => { if (e.key === 'Escape') close(); });

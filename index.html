@@ -238,34 +238,56 @@
 <!-- Case-study pop-up -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="env" viewBox="0 0 24 18"><rect x="1" y="1" width="22" height="16" rx="1.5" fill="#fff" stroke="#B8860B" stroke-width="1.6"/><path d="M1.8 2.2 12 10l10.2-7.8" fill="none" stroke="#B8860B" stroke-width="1.6"/></symbol></defs></svg>
 <div class="work" id="work" role="dialog" aria-modal="true" aria-label="Case study: Tradelane Management" hidden>
-  <div class="work__scrim" data-close-work></div>
-  <aside class="work__panel" tabindex="-1">
-    <header class="work__bar"><span>Case study · Freight forwarding</span><button type="button" class="work__close" data-close-work aria-label="Close case study"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button></header>
+  <div class="work__panel" tabindex="-1">
+    <div class="work__bg" aria-hidden="true"></div>
+    <header class="work__bar">
+      <span class="work__client">Tradelane Management</span>
+      <nav class="work__steps" aria-hidden="true"><span class="is-on" data-part="problem"><b>1</b> The problem</span><i></i><span data-part="solution"><b>2</b> The solution</span></nav>
+      <button type="button" class="work__close" data-close-work aria-label="Close case study"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+      <div class="work__prog" aria-hidden="true"><i></i></div>
+    </header>
 
-    <section class="scene scene--intro">
-      <p class="scene__tag">The client</p>
-      <h3 class="scene__title">Tradelane Management</h3>
-      <p class="scene__text">A freight forwarding and customs brokerage company. Every shipment depended on one thing: the email inbox. Keep scrolling to see what we built.</p>
+    <div class="work__intro">
+      <p class="scene__tag">Case study · Freight forwarding</p>
+      <h3>Tradelane Management</h3>
+      <p>A freight forwarding and customs brokerage company, where every shipment depended on one thing: the email inbox. Scroll to see the problem, and what we built.</p>
       <span class="scene__hint" aria-hidden="true">Scroll <i></i></span>
-    </section>
+    </div>
 
-    <section class="scene" data-scene="problem">
-      <p class="scene__tag">1 · The problem</p>
-      <h3 class="scene__title">Over <span class="count" data-count="200">200</span>+ emails a day.</h3>
-      <p class="scene__text">Filings, notices and customs documents poured into one shared Outlook mailbox, and every one was read, sorted and filed by hand.</p>
+    <article class="wcard wcard--dark" data-scene="problem">
+      <span class="wcard__ghost" aria-hidden="true">01</span>
+      <p class="scene__tag">The problem</p>
+      <h3 class="wcard__title">Over <span class="bigcount"><span class="count" data-count="200">200</span>+</span> emails a day.</h3>
+      <p class="wcard__text">Filings, notices and customs documents poured into one shared Outlook mailbox, around the clock.</p>
       <div class="scene__vis inbox-vis" aria-hidden="true">
-        <svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg>
+        <svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg><svg class="fly" viewBox="0 0 24 18" aria-hidden="true"><use href="#env"/></svg>
         <div class="tray">
+          <span class="tray__ring"></span>
           <svg viewBox="0 0 200 130" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M18 66 52 16h96l34 50v46a8 8 0 0 1-8 8H26a8 8 0 0 1-8-8z"/><path d="M18 66h54c0 20 14 30 28 30s28-10 28-30h54"/></svg>
           <b class="tray__badge"><span class="count" data-count="200">200</span></b>
         </div>
       </div>
-    </section>
+    </article>
 
-    <section class="scene" data-scene="read">
-      <p class="scene__tag">2 · Reading</p>
-      <h3 class="scene__title">Every email, read for you.</h3>
-      <p class="scene__text">Each message is classified, the attachment is read, and the key fields are pulled out and matched to the right shipment.</p>
+    <article class="wcard wcard--dark wcard--chaos" data-scene="chaos">
+      <span class="wcard__ghost" aria-hidden="true">02</span>
+      <p class="scene__tag">The problem</p>
+      <h3 class="wcard__title">Every one read, sorted and filed by hand.</h3>
+      <p class="wcard__text">More shipments meant more email, and more people feeding the inbox. The business could not grow without growing the manual work with it.</p>
+      <div class="scene__vis chaos-vis" aria-hidden="true"><span class="chip" data-rot="-6" style="left:8%;top:10%">ISF</span><span class="chip" data-rot="5" style="left:46%;top:4%">Arrival Notice</span><span class="chip" data-rot="4" style="left:4%;top:42%">Customs Docs</span><span class="chip" data-rot="-4" style="left:52%;top:38%">ISF Confirmation</span><span class="chip" data-rot="6" style="left:20%;top:70%">Delivery Order</span><span class="chip" data-rot="-7" style="left:62%;top:70%">Entry Form</span><span class="chip" data-rot="3" style="left:34%;top:26%">Release</span><span class="chip" data-rot="7" style="left:72%;top:18%">Bill of Lading</span><span class="chip" data-rot="-3" style="left:2%;top:78%">Packing List</span></div>
+    </article>
+
+    <article class="wcard wcard--gold wcard--divider" data-part-start="solution" data-scene="divider">
+      <p class="scene__tag">The solution</p>
+      <h3 class="wcard__title">So we built the platform that runs it.</h3>
+      <span class="divider__line m-a" aria-hidden="true"></span>
+    </article>
+
+    <article class="wcard wcard--light" data-scene="read">
+      <span class="wcard__ghost" aria-hidden="true">03</span>
+      <p class="scene__tag">The solution · Reading</p>
+      <h3 class="wcard__title">Every email, read for you.</h3>
+      <p class="wcard__text">Each message is classified, the attachment is read, and the key fields are pulled out and matched to the right shipment.</p>
       <div class="scene__vis mock mock--read" aria-hidden="true">
         <div class="doc"><u class="w40"></u><u class="w90"></u><u class="w70"></u><u class="hl m-a w80"></u><u class="w60"></u><u class="hl m-a w55"></u><u class="w90"></u><u class="hl m-a w65"></u><u class="w45"></u></div>
         <div class="fields">
@@ -275,34 +297,36 @@
           <div class="fld m-a"><small>Status</small><b>Ready to confirm</b></div>
         </div>
       </div>
-    </section>
+    </article>
 
-    <section class="scene" data-scene="track">
-      <p class="scene__tag">3 · Tracking</p>
-      <h3 class="scene__title">Every shipment, step by step.</h3>
-      <p class="scene__text">A live checklist per shipment ticks itself as documents arrive, so nothing quietly falls through the cracks.</p>
+    <article class="wcard wcard--cream" data-scene="track">
+      <span class="wcard__ghost" aria-hidden="true">04</span>
+      <p class="scene__tag">The solution · Tracking</p>
+      <h3 class="wcard__title">Every shipment, step by step.</h3>
+      <p class="wcard__text">A live checklist per shipment ticks itself as documents arrive, so nothing quietly falls through the cracks.</p>
       <div class="scene__vis mock mock--track" aria-hidden="true">
         <div class="pbar"><i class="m-a"></i></div>
         <div class="pbar__txt"><span>Shipment progress</span><b class="mini-count" data-mini="78" data-suffix="%">78%</b></div>
         <ul class="checklist"><li><span class="tick m-a"></span>ISF received</li><li><span class="tick m-a"></span>Reply sent to sender</li><li><span class="tick m-a"></span>Filed with customs broker</li><li><span class="tick m-a"></span>Arrival notice received</li><li><span class="tick m-a"></span>Fees paid · proof sent</li><li><span class="tick m-a"></span>Customs docs split &amp; filed</li><li><span class="tick m-a"></span>Delivery order issued</li><li><span class="tick tick--off"></span>Released by customs</li><li><span class="tick tick--off"></span>Sent to trucker</li></ul>
       </div>
-    </section>
+    </article>
 
-    <section class="scene" data-scene="act">
-      <p class="scene__tag">4 · Follow-up</p>
-      <h3 class="scene__title">The follow-up happens on its own.</h3>
-      <p class="scene__text">Replies, filings, signed letters and hand-offs go out automatically, or wait for a one-click approval.</p>
+    <article class="wcard wcard--light" data-scene="act">
+      <span class="wcard__ghost" aria-hidden="true">05</span>
+      <p class="scene__tag">The solution · Follow-up</p>
+      <h3 class="wcard__title">The follow-up happens on its own.</h3>
+      <p class="wcard__text">Replies, filings, signed letters and hand-offs go out automatically, or wait for a one-click approval.</p>
       <div class="scene__vis mock mock--act" aria-hidden="true"><div class="act m-a"><span class="tick tick--on"></span><span>Replied to the sender</span><small>automatic</small></div><div class="act m-a"><span class="tick tick--on"></span><span>Filed with the customs broker</span><small>automatic</small></div><div class="act m-a"><span class="tick tick--on"></span><span>Guarantee letter signed</span><small>automatic</small></div><div class="act m-a"><span class="tick tick--on"></span><span>Proof of payment emailed</span><small>automatic</small></div><div class="act m-a"><span class="tick tick--on"></span><span>Trucker notified</span><small>automatic</small></div></div>
-    </section>
+    </article>
 
-    <section class="scene scene--result" data-scene="out">
+    <article class="wcard wcard--gold wcard--result" data-scene="out">
       <p class="scene__tag">The result</p>
       <p class="out__line m-a"><b>200+</b> emails a day, read, sorted and filed automatically.</p>
       <p class="out__line m-a"><b>Every</b> shipment tracked, with nothing left to memory.</p>
       <p class="out__line m-a"><b>A team</b> free to grow the business instead of feeding the inbox.</p>
       <small class="out__note">Interface shown is simplified and illustrative.</small>
-    </section>
-  </aside>
+    </article>
+  </div>
 </div>
 
 <script src="vendor/gsap.min.js"></script>
