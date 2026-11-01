@@ -26,18 +26,118 @@
     });
   const liveReady = GSS_LIVE_URLS.length ? fetchLive().catch(() => {}) : Promise.resolve();
 
+  /* ---------- "See the Work" pop-up ----------
+     Slides in from the right; scrolling inside it walks through the steps (each scene animates as it
+     reaches the middle of the screen, in both directions). Reaching the bottom closes it. */
+  function initWork(useGsap) {
+    const modal = $('#work'); if (!modal) return;
+    const panel = $('.work__panel', modal);
+    const clamp01 = v => Math.min(1, Math.max(0, v));
+    const fmtN = (n, sep) => (sep ? Math.round(n).toLocaleString('en-US') : String(Math.round(n)));
+    let scenes = [], closeTimer = null, isOpen = false;
+
+    const build = () => {
+      if (!useGsap || scenes.length) return;
+      const mk = () => gsap.timeline({ paused: true, defaults: { ease: 'none' } });
+      const seq = (tl, els, from, to, at, span, ease = 'power2.out') => {
+        if (!els.length) return;
+        const dur = span * 0.55, each = els.length > 1 ? (span - dur) / (els.length - 1) : 0;
+        tl.fromTo(els, from, { ...to, duration: dur, ease, stagger: each }, at);
+      };
+      const rnd = (i, n) => { const x = Math.sin(i * 91.7 + n * 12.9) * 43758.5453; return x - Math.floor(x); };
+      $$('[data-scene]', modal).forEach(el => {
+        const tl = mk(), vis = $('.scene__vis', el) || $$('.out__line', el)[1] || el;
+        switch (el.dataset.scene) {
+          case 'problem': {
+            const flies = $$('.fly', el), counts = $$('.count', el), tray = $('.tray', el);
+            const R = Math.max(el.clientWidth * 0.5, 260);
+            flies.forEach((f, i) => {
+              const a = rnd(i, 1) * Math.PI * 2, d = R * (0.8 + rnd(i, 2) * 0.5);
+              const sx = Math.cos(a) * d, sy = -Math.abs(Math.sin(a)) * d * 0.9 - 40;
+              const at = 0.04 + (i / flies.length) * 0.78;
+              tl.fromTo(f, { x: sx, y: sy, rotation: (rnd(i, 3) - 0.5) * 80, scale: 1.25 },
+                { x: 0, y: 56, rotation: 0, scale: 0.4, duration: 0.2, ease: 'power2.in' }, at)
+                .fromTo(f, { opacity: 0 }, { opacity: 1, duration: 0.03 }, at)
+                .to(f, { opacity: 0, duration: 0.03 }, at + 0.17);
+            });
+            const o = { v: 0 };
+            tl.fromTo(o, { v: 0 }, { v: 200, duration: 0.95, ease: 'power3.in', onUpdate: () => counts.forEach(c => (c.textContent = fmtN(o.v))) }, 0);
+            tl.fromTo(tray, { scale: 1 }, { scale: 1.14, duration: 0.95, ease: 'power2.in' }, 0);
+            counts.forEach(c => (c.textContent = '0'));
+            break;
+          }
+          case 'read':
+            seq(tl, $$('.hl', el), { scaleX: 0 }, { scaleX: 1 }, 0, 0.55, 'none');
+            seq(tl, $$('.fld', el), { opacity: 0, x: 24 }, { opacity: 1, x: 0 }, 0.35, 0.65); break;
+          case 'track': {
+            seq(tl, $$('.tick.m-a', el), { scale: 0 }, { scale: 1 }, 0, 1, 'back.out(2)');
+            tl.fromTo($('.pbar i', el), { scaleX: 0 }, { scaleX: 1, duration: 1 }, 0);
+            const m = $('.mini-count', el), o = { v: 0 }, suf = m.dataset.suffix || '';
+            tl.fromTo(o, { v: 0 }, { v: +m.dataset.mini, duration: 1, onUpdate: () => (m.textContent = Math.round(o.v) + suf) }, 0);
+            m.textContent = '0' + suf; break;
+          }
+          case 'act': seq(tl, $$('.act', el), { opacity: 0, y: 24 }, { opacity: 1, y: 0 }, 0, 1); break;
+          case 'out': seq(tl, $$('.out__line', el), { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, 0, 1); break;
+        }
+        scenes.push({ el, vis, tl });
+      });
+    };
+
+    // a scene plays while its visual travels from the lower part of the screen to the middle
+    const update = () => {
+      const H = panel.clientHeight, top = panel.getBoundingClientRect().top;
+      scenes.forEach(s => {
+        const r = s.vis.getBoundingClientRect();
+        const center = r.top - top + r.height / 2;
+        s.tl.progress(clamp01((H * 0.96 - center) / (H * 0.4)));
+      });
+      const atBottom = panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 3;
+      if (isOpen && atBottom && panel.scrollTop > 40) { if (!closeTimer) closeTimer = setTimeout(close, 1400); }
+      else if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+    };
+
+    const open = () => {
+      if (isOpen) return;
+      isOpen = true;
+      build();
+      modal.hidden = false;
+      root.classList.add('work-open');
+      panel.scrollTop = 0;
+      update();
+      requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('is-open')));
+      panel.focus({ preventScroll: true });
+    };
+    function close() {
+      if (!isOpen) return;
+      isOpen = false;
+      clearTimeout(closeTimer); closeTimer = null;
+      modal.classList.remove('is-open');
+      root.classList.remove('work-open');
+      setTimeout(() => { if (!isOpen) { modal.hidden = true; panel.scrollTop = 0; update(); } }, 800);
+    }
+
+    panel.addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', () => { if (isOpen) update(); });
+    $('.work__scrim', modal).addEventListener('wheel', e => { e.preventDefault(); panel.scrollTop += e.deltaY; }, { passive: false });
+    $$('[data-open-work]').forEach(b => b.addEventListener('click', open));
+    $$('[data-close-work]', modal).forEach(b => b.addEventListener('click', close));
+    addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  }
+
   // Static fallback: reduced motion, or GSAP failed to load → plain scrolling page.
   if (!root.classList.contains('js') || !window.gsap || !window.ScrollTrigger) {
     root.classList.remove('js');
     body.classList.remove('is-loading');
     const c = $('.curtain'); if (c) c.remove();
     liveReady.then(() => $$('.num').forEach(n => (n.textContent = finalNum(n))));
+    initWork(false);
     $$('.num').forEach(n => (n.textContent = finalNum(n)));
     $('#year').textContent = new Date().getFullYear();
     return;
   }
 
   gsap.registerPlugin(ScrollTrigger);
+  initWork(true);
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   scrollTo(0, 0);
   $('#year').textContent = new Date().getFullYear();
@@ -120,10 +220,10 @@
      Everything inside a pane (headline, cards, counters, chart, quote) is a tween on this timeline,
      so it moves with the scrollbar in both directions. */
   const T = 0.9;        // slide length, in timeline units (1 unit = 1.1 screen heights of scroll)
-  const IN_PANE = 0.5;
-  const IN_PANE_WHAT = 0.65; // the long case-study track scrolls a touch faster so it doesn't drag  // in-pane scrolling (cards, tall content) moves at half speed: 2px of scroll per 1px of travel
+  const IN_PANE = 0.5;  // in-pane scrolling (cards, tall content) moves at half speed: 2px of scroll per 1px of travel
+  const IN_PANE_WHAT = 0.5;
   const MARGIN = 0.25;  // breathing room after a pane finishes, before the next one slides up
-  const DWELL = { results: 1.0, what: 0.35, problem: 0.9, philosophy: 1.0, team: 0.6, contact: 0.5 };
+  const DWELL = { results: 1.0, what: 0.35, philosophy: 1.0, team: 0.6, contact: 0.5 };
   let tl, unit, rest = [], total = 1, activeIdx = 0;
   let resizeT;
 
@@ -169,50 +269,12 @@
 
     $$('.num', pane).forEach(n => {
       const end = +n.dataset.count, o = { v: 0 };
+      n.style.minWidth = '';
+      n.textContent = fmt(end, n.dataset.sep);
+      n.style.minWidth = n.getBoundingClientRect().width + 'px';   // reserve the final width so nothing wobbles
       n.textContent = fmt(0, n.dataset.sep);
       tl.fromTo(o, { v: 0 }, { v: end, duration: 0.7 * L, ease: 'power1.out', onUpdate: () => (n.textContent = fmt(o.v, n.dataset.sep)) }, P(0.3));
     });
-  }
-
-  // The case-study mock-ups animate as their panel travels into view (scroll-linked, reversible)
-  function addShowcase(track, t0, span, dist) {
-    const trackLeft = track.getBoundingClientRect().left;
-    const W = innerWidth, rs = t0 - DWELL.what - 0;
-    const win = el => {
-      const left = el.getBoundingClientRect().left - trackLeft;
-      const s = Math.max(rs + 0.05, t0 + span * ((left - 0.92 * W) / dist));
-      const e = Math.max(s + 0.12, t0 + span * ((left - 0.4 * W) / dist));
-      return [s, e - s];
-    };
-    const seq = (els, from, to, s, d, ease = 'power2.out') => {
-      if (!els.length) return;
-      const dur = d * 0.55, each = els.length > 1 ? (d - dur) / (els.length - 1) : 0;
-      tl.fromTo(els, from, { ...to, duration: dur, ease, stagger: each }, s);
-    };
-    const mini = (el, s, d) => {
-      const end = +el.dataset.mini, o = { v: 0 }, suf = el.dataset.suffix || '';
-      el.textContent = '0' + suf;
-      tl.fromTo(o, { v: 0 }, { v: end, duration: d, ease: 'none', onUpdate: () => (el.textContent = Math.round(o.v) + suf) }, s);
-    };
-    $$('.panel--show', track).forEach(p => {
-      const [s, d] = win(p);
-      switch (p.dataset.show) {
-        case 'inbox':
-          seq($$('.mrow', p), { opacity: 0, x: 40 }, { opacity: 1, x: 0 }, s, d);
-          mini($('.mini-count', p), s, d); break;
-        case 'read':
-          seq($$('.hl', p), { scaleX: 0 }, { scaleX: 1 }, s, d * 0.6, 'none');
-          seq($$('.fld', p), { opacity: 0, x: 24 }, { opacity: 1, x: 0 }, s + d * 0.4, d * 0.6); break;
-        case 'track':
-          seq($$('.tick.m-a', p), { scale: 0 }, { scale: 1 }, s, d, 'back.out(2)');
-          tl.fromTo($('.pbar i', p), { scaleX: 0 }, { scaleX: 1, duration: d, ease: 'none' }, s);
-          mini($('.mini-count', p), s, d); break;
-        case 'act':
-          seq($$('.act', p), { opacity: 0, y: 24 }, { opacity: 1, y: 0 }, s, d); break;
-      }
-    });
-    const out = $('.panel--out', track);
-    if (out) { const [s, d] = win(out); seq($$('.out__line', out), { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, s, d); }
   }
 
   function build() {
@@ -239,7 +301,7 @@
       }
       const rs = t;
       const D = DWELL[pane.id] || 0;
-      if (D) addContent(pane, rs - T * 0.5, T * 0.5 + D);
+      if (D) addContent(pane, rs - T * 0.15, T * 0.15 + D);
       t = rs + D;
       // then in-pane scrolling: the horizontal cards, or any content taller than the screen
       const inner = $('.pane-inner', pane);
@@ -250,7 +312,6 @@
         const dist = Math.max(0, track.scrollWidth - (innerWidth - 84));
         span = dist / (unit * IN_PANE_WHAT);
         tl.to(track, { x: -dist, duration: span }, t);
-        addShowcase(track, t, span, dist);
         tl.to('.hscroll__bgtext', { x: -dist * 0.2, duration: span }, t);
       } else if (overflow > 40) {
         span = overflow / (unit * IN_PANE);
