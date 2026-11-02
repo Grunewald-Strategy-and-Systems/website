@@ -104,7 +104,6 @@
         const r = card.getBoundingClientRect(), c = r.top - top + r.height / 2;
         const q = clamp01((H * 1.05 - c) / (H * 0.5));
         card.style.transform = `translateY(${(1 - q) * 70}px) scale(${0.93 + 0.07 * q})`;
-        card.style.opacity = 0.35 + 0.65 * q;
       });
       scenes.forEach(s => {
         const r = s.vis.getBoundingClientRect();
