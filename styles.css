@@ -491,3 +491,11 @@ html.work-open{overflow:hidden}
 @media (max-width:700px){.wcard__title{max-width:none}.work__steps span{padding:6px 10px;font-size:10px}.work__steps i{display:none}.work__client{display:none}}
 .philosophy .display{font-size:clamp(34px,min(5vw,8.4vh),82px);max-width:16ch}
 .zh{font-family:'Noto Serif SC','Songti SC','SimSun','Noto Serif CJK SC',serif}
+
+/* no header; the cards simply keep rising off the top to leave */
+.work__exit{height:95vh}
+.wcard:last-of-type{margin-bottom:16vh}
+.work__bg{transition:opacity .25s ease}
+.work.is-open .work__bg{transition:opacity .25s ease}
+.work__intro{min-height:70vh}
+.wcard--result .scene__hint{color:#fff}.wcard--result .scene__hint i{background:#fff}

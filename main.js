@@ -97,8 +97,7 @@
     };
 
     // a card rises into place as it nears the middle; its animation plays as its visual reaches the middle
-    const parts = $$('.work__steps span', modal), prog = $('.work__prog i', modal);
-    const divider = $('[data-part-start]', modal);
+    const bg = $('.work__bg', modal);
     const update = () => {
       const H = panel.clientHeight, top = panel.getBoundingClientRect().top;
       $$('.wcard', modal).forEach(card => {
@@ -112,14 +111,11 @@
         const center = r.top - top + r.height / 2;
         s.tl.progress(clamp01((H * 0.96 - center) / (H * 0.4)));
       });
-      if (divider) {
-        const dr = divider.getBoundingClientRect(), solution = dr.top - top + dr.height / 2 < H * 0.55;
-        parts.forEach(p => p.classList.toggle('is-on', (p.dataset.part === 'solution') === solution));
-      }
-      const max = panel.scrollHeight - panel.clientHeight;
-      prog.style.transform = `scaleX(${max > 0 ? panel.scrollTop / max : 0})`;
-      const atBottom = panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 3;
-      if (isOpen && atBottom && panel.scrollTop > 40) { if (!closeTimer) closeTimer = setTimeout(close, 1600); }
+      // past the last card the cards keep rising off the top while the dim fades away; that is the way out
+      const max = panel.scrollHeight - panel.clientHeight, rem = max - panel.scrollTop;
+      if (isOpen && rem < H * 0.6) bg.style.opacity = clamp01(rem / (H * 0.6));
+      else bg.style.opacity = '';
+      if (isOpen && max > 0 && rem <= 6 && panel.scrollTop > 40) { if (!closeTimer) closeTimer = setTimeout(close, 250); }
       else if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
     };
 
@@ -140,6 +136,7 @@
       clearTimeout(closeTimer); closeTimer = null;
       modal.classList.remove('is-open');
       root.classList.remove('work-open');
+      bg.style.opacity = '';
       setTimeout(() => { if (!isOpen) { modal.hidden = true; panel.scrollTop = 0; update(); } }, 950);
     }
 
@@ -147,6 +144,7 @@
     addEventListener('resize', () => { if (isOpen) update(); });
     $$('[data-open-work]').forEach(b => b.addEventListener('click', open));
     $$('[data-close-work]', modal).forEach(b => b.addEventListener('click', close));
+    panel.addEventListener('click', e => { if (!e.target.closest('.wcard, .work__intro')) close(); });
     addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   }
 
