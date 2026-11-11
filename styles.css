@@ -147,16 +147,19 @@ body.is-loading .curtain{pointer-events:auto}
 .member__facts{grid-column:1/-1;margin-top:8px;display:flex;flex-wrap:wrap;gap:10px}
 .member__facts li{border:1px solid rgba(217,179,90,.7);color:var(--gold-soft);padding:8px 16px;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
 .member + .team__flow{margin-top:36px}
-.team{--team-focus:30% 20%}
+.team{--team-focus:60% 20%}
 .team__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--team-focus);z-index:-2}
 .team__shade{position:absolute;inset:0;z-index:-1;background:
-  linear-gradient(90deg,rgba(40,0,0,.55) 0%,rgba(40,0,0,.15) 35%,rgba(40,0,0,.55) 62%,rgba(40,0,0,.92) 100%),
-  linear-gradient(0deg,rgba(40,0,0,.7) 0%,transparent 40%)}
-.team__grid{display:grid;grid-template-columns:1fr minmax(0,520px);gap:clamp(32px,6vw,110px);align-items:end}
+  linear-gradient(90deg,rgba(69,4,4,.45) 0%,rgba(69,4,4,0) 40%,rgba(69,4,4,0) 62%,rgba(69,4,4,.5) 100%),
+  linear-gradient(0deg,rgba(69,4,4,.55) 0%,transparent 35%)}
+.team__grid{display:grid;grid-template-columns:1fr minmax(0,440px);gap:clamp(32px,6vw,110px);align-items:end}
 .team .display{max-width:9ch;text-shadow:0 2px 40px rgba(40,0,0,.6)}
 .team .kicker{color:var(--gold-soft)}
-.team__copy{padding:clamp(24px,3vw,40px);background:rgba(40,0,0,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(217,179,90,.35)}
-.team .member p{color:rgba(255,255,255,.92)}
+.team__copy{padding:clamp(24px,3vw,36px);background:rgba(250,246,241,.94);color:var(--maroon);border-radius:4px;box-shadow:0 20px 60px rgba(40,0,0,.25)}
+.team .member p{color:var(--maroon)}
+.team .member{border-top-color:var(--gold)}
+.team .member em,.team .member__role{color:var(--gold)}
+.team .member__facts li{border-color:var(--gold);color:var(--gold)}
 .team__tags{display:flex;flex-wrap:wrap;gap:10px;margin:36px 0}
 .team__tags li{border:1px solid var(--gold);color:var(--gold);padding:8px 16px;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
 .team__flow{display:flex;gap:0;flex-wrap:wrap;counter-reset:s}
@@ -224,7 +227,7 @@ body.is-loading .curtain{pointer-events:auto}
   .rail{top:auto;bottom:16px;transform:none;right:12px}
   .rail__btn--first{margin-top:0}
   .philosophy__grid,.team__grid,.why__grid{grid-template-columns:1fr}
-  .team__shade{background:linear-gradient(0deg,rgba(40,0,0,.92) 0%,rgba(40,0,0,.6) 55%,rgba(40,0,0,.35) 100%)}
+  .team__shade{background:linear-gradient(0deg,rgba(69,4,4,.8) 0%,rgba(69,4,4,.3) 50%,transparent 100%)}
   .team__grid{align-items:start}
   .exp__grid{grid-template-columns:1fr}
   .exp__stats{grid-template-columns:1fr}
