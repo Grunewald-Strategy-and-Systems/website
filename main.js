@@ -6,10 +6,9 @@
   const fmt = (n, sep) => (sep ? Math.round(n).toLocaleString('en-US') : String(Math.round(n)));
   const finalNum = n => fmt(+n.dataset.count, n.dataset.sep);
 
-  // Live "costs saved / hours saved" totals. List the JSON endpoints of the back ends to add up, each returning
-  // {"hours": 60, "money": 1750}; the page sums them. Empty = keep the fallback numbers written in index.html.
-  // (Endpoints must be public, read-only, aggregate-only and allow CORS for this site.)
-  const GSS_LIVE_URLS = [];
+  // Live "costs saved / hours saved" totals. /api/stats (server.js) already adds up every automation project and
+  // returns {"hours": 60, "money": 1750}. If it is unreachable or unconfigured the fallback numbers in index.html stay.
+  const GSS_LIVE_URLS = ['/api/stats'];
   const LIVE_POLL_MS = 60000;
   const fetchLive = () => Promise.all(GSS_LIVE_URLS.map(u => fetch(u, { headers: { Accept: 'application/json' } })
     .then(r => (r.ok ? r.json() : Promise.reject())).catch(() => null)))

@@ -1,0 +1,8 @@
+{
+  "name": "gss-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Grunewald Strategy & Systems — site + aggregated automation stats API",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
