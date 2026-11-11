@@ -148,7 +148,7 @@ body.is-loading .curtain{pointer-events:auto}
 .member__facts li{border:1px solid rgba(217,179,90,.7);color:var(--gold-soft);padding:8px 16px;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
 .member + .team__flow{margin-top:36px}
 .team{--team-focus:60% 20%}
-.team__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--team-focus);z-index:-2}
+.team__bg{position:absolute;top:0;bottom:0;left:24%;height:100%;width:auto;max-width:none;z-index:-2;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 76%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 76%,transparent 100%)}
 .team__shade{position:absolute;inset:0;z-index:-1;background:
   linear-gradient(90deg,rgba(69,4,4,.45) 0%,rgba(69,4,4,0) 40%,rgba(69,4,4,0) 62%,rgba(69,4,4,.5) 100%),
   linear-gradient(0deg,rgba(69,4,4,.55) 0%,transparent 35%)}
@@ -229,6 +229,7 @@ body.is-loading .curtain{pointer-events:auto}
   .philosophy__grid,.team__grid,.why__grid{grid-template-columns:1fr}
   .team__shade{background:linear-gradient(0deg,rgba(69,4,4,.8) 0%,rgba(69,4,4,.3) 50%,transparent 100%)}
   .team__grid{align-items:start}
+  .team__bg{left:0;width:100%;object-fit:cover;object-position:50% 12%;-webkit-mask-image:none;mask-image:none}
   .exp__grid{grid-template-columns:1fr}
   .exp__stats{grid-template-columns:1fr}
   .exp__stats>div{flex-direction:row}
