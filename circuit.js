@@ -10,7 +10,7 @@
   const GOLD = '184,134,11';
   const GLOW = '232,190,90';
   const BASE_ALPHA = 0.26;
-  const RADIUS = 160;        // how far from the pointer a trace starts to glow (px)
+  const RADIUS = 120;        // how close the pointer must be to an arrow for it to glow (px)
   const ARROW = 7;           // arrowhead length (px)
 
   let W = 0, H = 0, dpr = 1, G = 36;
@@ -153,7 +153,7 @@
     let busy = false;
     for (const t of traces) {
       const d = pointer ? distTo(t, pointer.x, pointer.y) : Infinity;
-      const target = d < RADIUS ? 1 - d / RADIUS : 0;
+      const target = d < RADIUS ? Math.min(1, (1 - d / RADIUS) * 1.6) : 0;
       t.glow += (target - t.glow) * (reduced ? 1 : target > t.glow ? 0.25 : 0.06);
       if (t.glow < 0.01) { t.glow = 0; continue; }
       if (Math.abs(target - t.glow) > 0.01) busy = true;
