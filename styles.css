@@ -68,8 +68,7 @@ body.is-loading .curtain{pointer-events:auto}
 /* ---------- hero ---------- */
 .hero{background:var(--white)}
 .hero__bg{position:absolute;inset:0;z-index:-1;overflow:hidden}
-.hero__rings{position:absolute;right:-18%;top:50%;width:min(110vh,1000px);height:min(110vh,1000px);transform:translateY(-50%);opacity:.38}
-.hero__rings g:first-child circle{transform-origin:600px 600px}
+.hero__circuit{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hero__glow{position:absolute;width:60vmax;height:60vmax;left:0;top:0;margin:-30vmax 0 0 -30vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(184,134,11,.18),rgba(184,134,11,0));will-change:transform}
 .hero__inner{position:relative}
 .hero__lead{font-family:var(--font-serif);font-style:italic;font-size:clamp(20px,2.2vw,32px);margin:26px 0 0;max-width:30ch;line-height:1.25}
