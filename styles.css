@@ -146,7 +146,7 @@ body.is-loading .curtain{pointer-events:auto}
 .member__facts li{border:1px solid rgba(217,179,90,.7);color:var(--gold-soft);padding:8px 16px;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
 .member + .team__flow{margin-top:36px}
 .team{--team-focus:30% 20%}
-.team__bg{position:absolute;top:0;bottom:0;left:calc(45vw - 82.5vh);height:100%;width:auto;max-width:none;z-index:-2;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22%,#000 78%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 22%,#000 78%,transparent 100%)}
+.team__bg{position:absolute;top:0;bottom:0;left:calc(45vw - 82.5vh);height:100%;width:auto;max-width:none;z-index:-2;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
 .team__shade{position:absolute;inset:0;z-index:-1;background:
   linear-gradient(90deg,rgba(40,0,0,.55) 0%,rgba(40,0,0,.15) 35%,rgba(40,0,0,.55) 62%,rgba(40,0,0,.92) 100%),
   linear-gradient(0deg,rgba(40,0,0,.7) 0%,transparent 40%)}
@@ -230,6 +230,8 @@ body.is-loading .curtain{pointer-events:auto}
   .exp__stats>div{flex-direction:row}
 }
 @media (max-width:700px){
+  .team .pane-inner{justify-content:flex-end}
+  .team .member p,.team .member__facts{display:none}
   .hero__trio,.problem__cols{grid-template-columns:1fr}
   .hero__title{white-space:normal}
   .hscroll__track{flex-direction:column;width:100%}
