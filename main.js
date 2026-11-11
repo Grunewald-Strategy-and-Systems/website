@@ -4,12 +4,63 @@
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const fmt = (n, sep) => (sep ? Math.round(n).toLocaleString('en-US') : String(Math.round(n)));
-  const finalNum = n => fmt(+n.dataset.count, n.dataset.sep);
 
   // Live "costs saved / hours saved" totals. /api/stats (server.js) already adds up every automation project and
   // returns {"hours": 60, "money": 1750}. If it is unreachable or unconfigured the fallback numbers in index.html stay.
   const GSS_LIVE_URLS = ['/api/stats'];
-  const LIVE_POLL_MS = 60000;
+  const LIVE_POLL_MS = 20000;
+
+  /* ---------- live counters ----------
+     Not tied to scroll: they count up on a fixed clock (COUNT_MS) when Results slides in, however fast or slow
+     someone scrolls. After that, whenever the live total goes up the number ticks up from where it is, flashes
+     gold, and a "+N" pops above it, so visitors see time being saved in real time. */
+  const COUNT_MS = 2200, TICK_MS = 1500;
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fmtC = (n, el) => {
+    const d = +el.dataset.dec || 0;
+    return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: !!el.dataset.sep });
+  };
+  const counters = $$('.num[data-live-key]').map(el => ({ el, shown: 0, raf: 0, played: false }));
+  const paint = c => { c.el.textContent = fmtC(c.shown, c.el); };
+  const run = (c, to, ms) => {
+    cancelAnimationFrame(c.raf);
+    if (REDUCED || !ms) { c.shown = to; paint(c); return; }
+    const from = c.shown, t0 = performance.now();
+    const step = now => {
+      const p = Math.min(1, (now - t0) / ms);
+      c.shown = from + (to - from) * (1 - Math.pow(1 - p, 3));
+      paint(c);
+      if (p < 1) c.raf = requestAnimationFrame(step); else { c.shown = to; paint(c); }
+    };
+    c.raf = requestAnimationFrame(step);
+  };
+  const reserveWidth = c => {   // reserve the final width so nothing wobbles while counting
+    c.el.style.minWidth = '';
+    c.el.textContent = fmtC(+c.el.dataset.count, c.el);
+    c.el.style.minWidth = c.el.getBoundingClientRect().width + 'px';
+    paint(c);
+  };
+  const playIntro = () => counters.forEach(c => { if (!c.played) { c.played = true; run(c, +c.el.dataset.count, COUNT_MS); } });
+  const resetIntro = () => counters.forEach(c => { cancelAnimationFrame(c.raf); c.played = false; c.shown = 0; paint(c); });
+  const showFinal = () => counters.forEach(c => { c.played = true; c.shown = +c.el.dataset.count; paint(c); });
+  // a live total just changed: tick up from the current value (if the intro hasn't played yet it simply counts to the new total)
+  const applyLive = () => counters.forEach(c => {
+    const to = +c.el.dataset.count;
+    if (!c.played) { reserveWidth(c); return; }
+    const before = fmtC(c.shown, c.el);
+    if (to > c.shown && fmtC(to, c.el) !== before) {
+      const delta = to - c.shown, isMoney = c.el.dataset.liveKey === 'money';
+      const pop = document.createElement('span');
+      pop.className = 'tick-pop';
+      pop.textContent = '+' + (isMoney ? '$' : '') + fmtC(delta, c.el) + (isMoney ? '' : ' hrs');
+      pop.addEventListener('animationend', () => pop.remove());
+      c.el.closest('.stat-card__value').appendChild(pop);
+      c.el.classList.remove('is-tick'); void c.el.offsetWidth; c.el.classList.add('is-tick');
+      setTimeout(() => c.el.classList.remove('is-tick'), TICK_MS);
+    }
+    reserveWidth(c);
+    run(c, to, TICK_MS);
+  });
   const fetchLive = () => Promise.all(GSS_LIVE_URLS.map(u => fetch(u, { headers: { Accept: 'application/json' } })
     .then(r => (r.ok ? r.json() : Promise.reject())).catch(() => null)))
     .then(all => {
@@ -151,9 +202,10 @@
     root.classList.remove('js');
     body.classList.remove('is-loading');
     const c = $('.curtain'); if (c) c.remove();
-    liveReady.then(() => $$('.num').forEach(n => (n.textContent = finalNum(n))));
+    showFinal();
+    liveReady.then(showFinal);
+    if (GSS_LIVE_URLS.length) setInterval(() => { if (!document.hidden) fetchLive().then(ch => { if (ch) applyLive(); }).catch(() => {}); }, LIVE_POLL_MS);
     initWork(false);
-    $$('.num').forEach(n => (n.textContent = finalNum(n)));
     $('#year').textContent = new Date().getFullYear();
     return;
   }
@@ -245,7 +297,7 @@
   const IN_PANE = 0.5;  // in-pane scrolling (cards, tall content) moves at half speed: 2px of scroll per 1px of travel
   const IN_PANE_WHAT = 0.5;
   const MARGIN = 0.25;  // breathing room after a pane finishes, before the next one slides up
-  const DWELL = { results: 1.0, what: 0.35, philosophy: 1.0, team: 0.6, contact: 0.5 };
+  const DWELL = { results: 0.4, what: 0.35, philosophy: 1.0, team: 0.6, contact: 0.5 };
   let tl, unit, rest = [], total = 1, activeIdx = 0;
   let resizeT;
 
@@ -289,14 +341,7 @@
     $$('.why__half--yes', pane).forEach(el =>
       tl.fromTo(el, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.4 * L, ease: 'power2.inOut' }, P(0.4)));
 
-    $$('.num', pane).forEach(n => {
-      const end = +n.dataset.count, o = { v: 0 };
-      n.style.minWidth = '';
-      n.textContent = fmt(end, n.dataset.sep);
-      n.style.minWidth = n.getBoundingClientRect().width + 'px';   // reserve the final width so nothing wobbles
-      n.textContent = fmt(0, n.dataset.sep);
-      tl.fromTo(o, { v: 0 }, { v: end, duration: 0.7 * L, ease: 'power1.out', onUpdate: () => (n.textContent = fmt(o.v, n.dataset.sep)) }, P(0.3));
-    });
+    // (the live counters are not part of the scrub: see "live counters" at the top)
   }
 
   function build() {
@@ -307,6 +352,7 @@
     gsap.set('.hscroll__track', { clearProps: 'transform' });
     gsap.set($$('.fade-up, .quote-mark, .chart__dots, .chart__tag, .why__half--yes, .quote .w > span, .m-a, .split-words:not(.quote):not(.hero__lead) .w > span', $('.stage')), { clearProps: 'all' });
 
+    counters.forEach(reserveWidth);
     unit = innerHeight * 1.1;
     const isMobile = matchMedia('(max-width: 700px)').matches;
     tl = gsap.timeline({ defaults: { ease: 'none' } });
@@ -355,6 +401,12 @@
       let a = 0;
       for (let i = 1; i < N; i++) if (time >= rest[i].rs - T * 0.5) a = i;
       setActive(a);
+      // counters run on their own clock: start when Results is mostly in view, reset once it has slid away again
+      const ri = panes.findIndex(p => p.id === 'results');
+      if (ri > 0 && rest[ri]) {
+        if (time >= rest[ri].rs - T * 0.4) playIntro();
+        else if (time < rest[ri].rs - T * 0.95) resetIntro();
+      }
       gsap.set('.index__line i', { scaleY: tl.progress() });
     });
 
@@ -364,7 +416,8 @@
   }
 
   const start = () => liveReady.then(build);
-  if (GSS_LIVE_URLS.length) setInterval(() => fetchLive().then(ch => { if (ch) build(); }).catch(() => {}), LIVE_POLL_MS);
+  // polling never rebuilds the scroll timeline any more; changed totals just tick up in place
+  if (GSS_LIVE_URLS.length) setInterval(() => { if (!document.hidden) fetchLive().then(ch => { if (ch) applyLive(); }).catch(() => {}); }, LIVE_POLL_MS);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else addEventListener('load', start);
   addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(build, 250); });
 
