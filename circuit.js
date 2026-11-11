@@ -142,6 +142,33 @@
     return t.p[t.p.length - 1];
   }
 
+  // Text the arrows should fade behind (measured every frame: the intro and pane slides move it)
+  const TEXT = [...document.querySelectorAll('.hero .eyebrow, .hero__lead, .hero__title .chars, .hero__dot, .trio__label, .hero__trio p, .scroll-cue')];
+  const range = document.createRange();
+  const FADE = 0.85;         // how much of the arrows to erase behind text (1 = fully hidden)
+  const PAD = 18, SOFT = 26; // breathing room around the text, and how soft the fade's edge is (px)
+  // the mask is drawn as the shadow of boxes parked just off the left edge, which gives it a soft edge everywhere
+
+  function fadeBehindText() {
+    const c = canvas.getBoundingClientRect(), OFF = W + 200;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = '#000';
+    ctx.shadowColor = `rgba(0,0,0,${FADE})`;
+    ctx.shadowBlur = SOFT * dpr;
+    ctx.shadowOffsetX = OFF * dpr;
+    ctx.beginPath();
+    for (const el of TEXT) {
+      range.selectNodeContents(el);
+      for (const r of range.getClientRects()) {
+        if (!r.width || !r.height) continue;
+        ctx.rect(r.left - c.left - PAD - OFF, r.top - c.top - PAD, r.width + PAD * 2, r.height + PAD * 2);
+      }
+    }
+    ctx.fill();
+    ctx.restore();
+  }
+
   function render(now = performance.now()) {
     raf = 0;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -151,21 +178,6 @@
     ctx.lineJoin = 'miter'; ctx.lineCap = 'square';
 
     let busy = false;
-    for (const t of traces) {
-      const d = pointer ? distTo(t, pointer.x, pointer.y) : Infinity;
-      const target = d < RADIUS ? Math.min(1, (1 - d / RADIUS) * 1.6) : 0;
-      t.glow += (target - t.glow) * (reduced ? 1 : target > t.glow ? 0.25 : 0.06);
-      if (t.glow < 0.01) { t.glow = 0; continue; }
-      if (Math.abs(target - t.glow) > 0.01) busy = true;
-      const g = t.glow;
-      ctx.shadowColor = `rgba(${GLOW},${g})`;
-      ctx.shadowBlur = 14 * g;
-      ctx.lineWidth = 1 + g;
-      ctx.strokeStyle = `rgba(${GLOW},${0.3 + 0.7 * g})`;
-      ctx.fillStyle = ctx.strokeStyle;
-      path(t); ctx.stroke(); ends(t, ctx);
-    }
-
     if (!reduced && visible) {
       if (now - lastPulse > 700 && pulses.length < 5 && traces.length) {
         pulses.push({ t: traces[randi(0, traces.length - 1)], start: now, dur: rand(1400, 2400) });
@@ -191,6 +203,25 @@
       });
       busy = true;
     }
+    ctx.shadowBlur = 0;
+    fadeBehindText();
+
+    // hover glow sits above the fade, so arrows still respond under text
+    for (const t of traces) {
+      const d = pointer ? distTo(t, pointer.x, pointer.y) : Infinity;
+      const target = d < RADIUS ? Math.min(1, (1 - d / RADIUS) * 1.6) : 0;
+      t.glow += (target - t.glow) * (reduced ? 1 : target > t.glow ? 0.25 : 0.06);
+      if (t.glow < 0.01) { t.glow = 0; continue; }
+      if (Math.abs(target - t.glow) > 0.01) busy = true;
+      const g = t.glow;
+      ctx.shadowColor = `rgba(${GLOW},${g})`;
+      ctx.shadowBlur = 14 * g;
+      ctx.lineWidth = 1 + g;
+      ctx.strokeStyle = `rgba(${GLOW},${0.3 + 0.7 * g})`;
+      ctx.fillStyle = ctx.strokeStyle;
+      path(t); ctx.stroke(); ends(t, ctx);
+    }
+
     ctx.shadowBlur = 0;
     if (busy && visible) raf = requestAnimationFrame(render);
   }

@@ -506,3 +506,11 @@ html.work-open{overflow:hidden}
 .work.is-open .work__bg{transition:opacity .25s ease}
 .work__intro{min-height:70vh}
 .wcard--result .scene__hint{color:#fff}.wcard--result .scene__hint i{background:#fff}
+
+/* ---------- live tick: number flashes gold and a "+N" floats up whenever time/money is saved ---------- */
+.stat-card__value{position:relative}
+.stat-card .num{transition:color .5s ease,text-shadow .5s ease}
+.stat-card .num.is-tick{color:var(--gold);text-shadow:0 0 28px rgba(184,134,11,.55)}
+.tick-pop{position:absolute;left:0;top:-.2em;font-family:var(--font-display);font-size:clamp(18px,2.4vw,34px);color:var(--gold);letter-spacing:.04em;pointer-events:none;opacity:0;animation:tickpop 1.8s ease-out forwards}
+@keyframes tickpop{0%{opacity:0;transform:translateY(14px)}15%{opacity:1}100%{opacity:0;transform:translateY(-34px)}}
+@media (prefers-reduced-motion:reduce){.tick-pop{animation-duration:.01s}}
