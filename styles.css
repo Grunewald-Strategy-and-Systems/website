@@ -104,8 +104,7 @@ body.is-loading .curtain{pointer-events:auto}
 .chart{position:relative;padding:clamp(18px,2vw,32px);border:1px solid rgba(69,4,4,.14);background:linear-gradient(160deg,#fff,#fbf7f0)}
 .chart__svg{width:100%;height:auto;overflow:visible}
 .chart__tag{position:absolute;font-size:11px;letter-spacing:.24em;text-transform:uppercase;display:flex;flex-direction:column;gap:2px;font-weight:500}
-.chart__tag b{font-family:var(--font-display);font-size:28px;font-weight:400;line-height:1}
-.chart__tag--down{right:6%;bottom:30%;text-align:right}
+.chart__tag--down{right:6%;bottom:calc(30% + 30px);text-align:right}
 .chart__tag--up{right:6%;top:10%;color:var(--gold);text-align:right}
 .chart figcaption{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid rgba(69,4,4,.12);margin-top:12px;padding-top:18px}
 .stat{display:flex;flex-direction:column;font-family:var(--font-display);font-size:clamp(28px,3.4vw,52px);line-height:1}
