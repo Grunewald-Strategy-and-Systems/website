@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Libre+Caslon+Display&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400&text=%E4%B9%9D%E5%85%AD&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body class="is-loading">
 
@@ -41,14 +41,7 @@
 <section id="hero" class="sec sec--light hero" data-label="01">
 <div class="pane-inner">
   <div class="hero__bg" aria-hidden="true">
-    <svg class="hero__rings" viewBox="0 0 1200 1200" preserveAspectRatio="xMidYMid slice">
-      <g fill="none" stroke="#B8860B" stroke-width="1">
-        <circle cx="600" cy="600" r="140"/><circle cx="600" cy="600" r="260"/><circle cx="600" cy="600" r="380"/>
-        <circle cx="600" cy="600" r="500"/><circle cx="600" cy="600" r="620"/><circle cx="600" cy="600" r="740"/>
-      </g>
-      <g fill="#B8860B"><rect x="592" y="-4" width="16" height="16" transform="rotate(45 600 4)"/></g>
-    </svg>
-    <div class="hero__glow"></div>
+    <canvas class="hero__circuit"></canvas>
   </div>
 
   <div class="wrap hero__inner">
@@ -187,7 +180,10 @@
 </section>
 
 <!-- 5 · TEAM -->
-<section id="team" class="sec sec--light team" data-label="05">
+<section id="team" class="sec sec--dark team" data-label="05">
+<!-- Headshot: save your photo as assets/birkley.png (landscape or portrait, ~2000px wide). Tune the crop with --team-focus in styles.css. -->
+<img class="team__bg" src="assets/birkley.png" alt="Birkley Grunewald, Owner &amp; Managing Partner" decoding="async">
+<div class="team__shade" aria-hidden="true"></div>
 <div class="pane-inner">
   <div class="wrap team__grid">
     <div>
@@ -196,8 +192,6 @@
     </div>
     <div class="team__copy">
       <article class="member fade-up">
-        <!-- TODO: swap the monogram for a photo: <img class="member__photo" src="assets/birkley.jpg" alt="Birkley Grunewald"> -->
-        <div class="member__photo member__photo--placeholder" aria-hidden="true">BG</div>
         <div class="member__body">
           <h3>Birkley Grunewald</h3>
           <span class="member__role">Owner &amp; Managing Partner</span>
@@ -346,7 +340,8 @@
 
 <script src="vendor/gsap.min.js"></script>
 <script src="vendor/ScrollTrigger.min.js"></script>
-<script src="main.js"></script>
-<script src="chat.js"></script>
+<script src="main.js?v=2"></script>
+<script src="circuit.js?v=3"></script>
+<script src="chat.js?v=2"></script>
 </body>
 </html>

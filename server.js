@@ -92,7 +92,7 @@ async function getStats() {
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.json': 'application/json' };
 // Only these are public — never serve server.js, package.json, .git, docs, etc.
-const PUBLIC_FILES = new Set(['index.html', 'main.js', 'chat.js', 'styles.css']);
+const PUBLIC_FILES = new Set(['index.html', 'main.js', 'chat.js', 'circuit.js', 'styles.css']);
 const PUBLIC_DIRS = ['assets', 'vendor'];
 
 const json = (res, code, body, extra = {}) => {

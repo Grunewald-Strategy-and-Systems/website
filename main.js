@@ -278,15 +278,9 @@
   }
 
   /* ---------- ambient (kept calm) ---------- */
-  gsap.to('.hero__rings', { rotation: 360, duration: 160, repeat: -1, ease: 'none', transformOrigin: '50% 50%' });
-  gsap.to('.hero__rings g:first-child circle', { scale: 1.05, duration: 5, yoyo: true, repeat: -1, ease: 'sine.inOut', stagger: 0.6 });
   gsap.to('.contact__rings svg', { rotation: 360, duration: 220, repeat: -1, ease: 'none' });
   gsap.to('.marquee__track', { xPercent: -50, duration: 60, repeat: -1, ease: 'none' });
 
-  const glowX = gsap.quickTo('.hero__glow', 'x', { duration: 1.4, ease: 'power3' });
-  const glowY = gsap.quickTo('.hero__glow', 'y', { duration: 1.4, ease: 'power3' });
-  gsap.set('.hero__glow', { x: innerWidth * 0.7, y: innerHeight * 0.4 });
-  addEventListener('pointermove', e => { if (activeIdx === 0) { glowX(e.clientX); glowY(e.clientY); } });
 
   /* ---------- the pane engine ----------
      One master timeline, driven by scroll distance (eased gently, never snapped), runs the whole site:
