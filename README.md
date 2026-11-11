@@ -12,7 +12,7 @@ Static one-page site (no build step). Open `index.html`, or serve the folder: `p
 
 `server.js` (zero dependencies, `npm start`) serves the site and `GET /api/stats`, which pulls
 `hours_saved` / `cost_saved` from each automation project and returns the summed totals the Results section shows.
-Results are cached 60s; if a project is down its last good numbers are kept so totals never dip, and if nothing
+Results are cached 15s and the page re-checks every 20s, so new savings tick onto the counters within ~30s; if a project is down its last good numbers are kept so totals never dip, and if nothing
 is reachable the page keeps the fallback numbers in `index.html`.
 
 Railway variables: `GSS_SOURCES` (JSON array of `{name,url}`), `GSS_STATS_KEY` (shared secret),

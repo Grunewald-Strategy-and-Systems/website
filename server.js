@@ -10,7 +10,7 @@
 //                 Each entry may also set "key" (overrides GSS_STATS_KEY) and "enabled": false.
 //   GSS_STATS_KEY Shared secret sent to every project as `Authorization: Bearer <key>`.
 //   GSS_ADMIN_KEY Optional. Enables GET /api/stats/detail (per-project breakdown) for a future portal.
-//   CACHE_TTL_S   Seconds to cache results (default 60).  PORT is set by Railway.
+//   CACHE_TTL_S   Seconds to cache results (default 15).  PORT is set by Railway.
 'use strict';
 const http = require('http');
 const fs = require('fs');
@@ -18,7 +18,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const PORT = Number(process.env.PORT) || 3000;
-const CACHE_TTL_MS = (Number(process.env.CACHE_TTL_S) || 60) * 1000;
+const CACHE_TTL_MS = (Number(process.env.CACHE_TTL_S) || 15) * 1000;
 const FETCH_TIMEOUT_MS = 8000;
 const STATS_KEY = process.env.GSS_STATS_KEY || '';
 const ADMIN_KEY = process.env.GSS_ADMIN_KEY || '';
